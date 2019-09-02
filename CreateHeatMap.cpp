@@ -130,11 +130,8 @@ class ImageCalor {
 	vector <CUIndexMap> HeatMapBmp;
 
 	FILE* hOutFile;
-	bool appendMode;
 
-	uint8_t* yPixels, * uPixels, * vPixels;
-
-	COLORREF rgbPixels;
+	uint8_t* yPixels, * uPixels, * vPixels;	
 
 	uint32_t lumaHeight;
 	uint32_t lumaWidth;
@@ -160,6 +157,8 @@ public:
 		yPtr = yPixels;
 		uPtr = uPixels;
 		vPtr = vPixels;
+
+		COLORREF rgbPixels;
 
 		for (y = 0; y < lumaHeight; y++) {
 			for (x = 0; x < lumaWidth; x++) {
