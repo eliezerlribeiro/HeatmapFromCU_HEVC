@@ -616,7 +616,7 @@ void RunHeatMap() {
 	chmMap.ColSlice = int(udColSlice->Value);
 	chmMap.Widht    = int(udWidth->Value);
 	chmMap.Heigth   = int(udHeight->Value); 
-	chmMap.CUSize   = int(udCuSize->Value);
+	chmMap.CUSize   = int(udCuSize->Value);		
 
 	chmMap.SetDelim(msclr::interop::marshal_as<std::string>(edtDelim->Text));	
 	chmMap.SetFileOut(strFileName);
@@ -628,8 +628,9 @@ void RunHeatMap() {
 	memoLogger->AppendText("Create HeatMap\n");
 
 	//Create YUV HeatMap
-	strFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);
-	chmMap.LoadHeatMap(strFileName, int(udColHeat->Value), nHeader);
+	strFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);	
+
+	chmMap.LoadHeatMap(strFileName, int(udColHeat->Value), int(udValueMin->Value), int(udValueMax->Value), nHeader);
 }
 
 vector<string> split(const string& str, const string& delim){

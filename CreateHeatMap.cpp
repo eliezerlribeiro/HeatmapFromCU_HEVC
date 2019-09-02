@@ -49,10 +49,8 @@ using std::to_string;
 
 class CU {
 	double NormalizeToRange(double dToNormal) {
-		if (dToNormal < 1) {
-			dToNormal = dToNormal * 100;
-		}
-		return dToNormal;
+		dToNormal = (dToNormal - ValueMin) / (ValueMax - ValueMin);
+		return dToNormal * 100;
 	}
 
 	COLORREF ConvertColor(string param) {
@@ -72,7 +70,7 @@ class CU {
 		}
 
 		COLORREF c;
-		int spaceRgb = int(x / 25);
+		int spaceRgb = int(xNormal / 25);
 		if (spaceRgb < 1) {
 			c = RGB(0, int(dFatorRgb), 255);
 		} else if (spaceRgb < 2) {
@@ -81,6 +79,8 @@ class CU {
 			c = RGB(int(dFatorRgb), 255, 0);
 		}else if (spaceRgb < 4) {
 			c = RGB(255, int(255-dFatorRgb), 0);
+		} else if (spaceRgb == 4) {
+			c = RGB(255, 0, 0);
 		}else {
 			c = RGB(128, 128, 128);
 		}
@@ -89,11 +89,14 @@ class CU {
 	}
 
 public:
+	int ValueMin, ValueMax;
 	int Posx, Posy, Slice;
 	int ColSlice, ColPosX, ColPosY, ColColor;
 	COLORREF Color;
 
 	CU() {
+		ValueMax = 100;
+		ValueMin = 0;
 		ColPosX = 3;
 		ColPosY = 4;
 		ColSlice = 5;
@@ -362,7 +365,7 @@ public :
 		return 0;
 	}
 
-	void LoadHeatMap(string PathFile, int nIndexHeat, int nRemoveLines) {		
+	void LoadHeatMap(string PathFile, int nIndexHeat, int nValueMin, int nValueMax, int nRemoveLines) {		
 		ifstream pfFIle(PathFile.c_str());
 		if (!pfFIle.is_open()) {
 			cout << "ERROR: File Open" << '\n';
@@ -389,6 +392,8 @@ public :
 		bool bFirstLoop = true;
 		CU lineCU;		
 		lineCU.ColColor = nIndexHeat;
+		lineCU.ValueMin = nValueMin;
+		lineCU.ValueMax = nValueMax;
 
 		while (pfFIle.good()) {
 			getline(pfFIle, line);
@@ -413,6 +418,6 @@ public :
 		HeatImage.SaveImageYUV();
 		
 		pfFIle.close();
-		HeatImage.FreeMemory();
+		//HeatImage.FreeMemory();
 	}
 };
