@@ -1,0 +1,6 @@
+Address,High,Width,PosX,PosY,Slice,Type,Depth,SkipFlag,PredMode,PartSize,QP,TransformIdx,mergeflag,mergeindex,intraDirLuma,intraDirCroma,interDir,explicitRdpcmModeY,explicitRdpcmModeCb,explicitRdpcmModeCr,CbfY,CbfCb,CbfCr,apiMVPIdx,apiMVPNum,ReducaoTaxa,Decision
+1,720,1280,64,0,0,2,0,0,1,0,20,1,0,0,1,36,0,3,3,3,3,3,3,-1,-1,0.95,0
+96,720,1280,1024,256,0,2,0,0,1,0,20,1,0,0,1,36,0,3,3,3,3,3,3,-1,-1,0.95,1
+96,720,1280,1024,256,0,2,0,0,1,0,20,1,0,0,1,36,0,3,3,3,3,3,3,-1,-1,0.95,1
+96,720,1280,1024,256,0,2,0,0,1,0,20,1,0,0,1,36,0,3,3,3,3,3,3,-1,-1,0.95,1
+96,720,1280,1024,256,0,2,0,0,1,0,20,1,0,0,1,36,0,3,3,3,3,3,3,-1,-1,0.95,1
