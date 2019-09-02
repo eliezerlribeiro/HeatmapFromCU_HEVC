@@ -48,82 +48,72 @@ using std::ifstream;
 using std::to_string;
 
 class CU {
-	int address, Slice, Depth;
-	int SizeNxN;
-	int IndexOfColor;
-	COLORREF m_Color;
+	double NormalizeToRange(double dToNormal) {
+		if (dToNormal < 1) {
+			dToNormal = dToNormal * 100;
+		}
+		return dToNormal;
+	}
 
 	COLORREF ConvertColor(string param) {
 		double x = atof(param.c_str());
-		if (x < 1) {
-			x = x * 100;
-		}
+		
+		// Normaliza para ficar de 0 - 100
+		double xNormal = NormalizeToRange(x);
 
 		double c_FatorMult = 255 / 25;
 
-		double dFatorRgb = c_FatorMult * (int(x) % 25);
+		//Retorna fator rgb (heat)
+		double dFatorRgb = c_FatorMult * (int(xNormal) % 25);
 		if (dFatorRgb > 255) {
 			dFatorRgb = 255;
 		}else if (dFatorRgb < 0) {
 			dFatorRgb = 0;
 		}
 
-		int spaceRgb = x / 25;
-
 		COLORREF c;
+		int spaceRgb = int(x / 25);
 		if (spaceRgb < 1) {
 			c = RGB(0, int(dFatorRgb), 255);
 		} else if (spaceRgb < 2) {
 			c = RGB(0, 255, int(255-dFatorRgb));
 		}else if (spaceRgb < 3) {
 			c = RGB(int(dFatorRgb), 255, 0);
-		}else {
+		}else if (spaceRgb < 4) {
 			c = RGB(255, int(255-dFatorRgb), 0);
+		}else {
+			c = RGB(128, 128, 128);
 		}
 
 		return c;
 	}
 
 public:
-	int Posx, Posy, Widht, Heigth;
+	int Posx, Posy, Slice;
+	int ColSlice, ColPosX, ColPosY, ColColor;
+	COLORREF Color;
+
 	CU() {
-		IndexOfColor = 1;
-	}
-
-	COLORREF GetColor() {
-		return m_Color;
-	}
-
-	int GetSlice() {
-		return Slice;
-	}
-	int GetWidht() {
-		return Widht;
-	}
-
-	int GetHeigth() {
-		return Heigth;
-	}
-
-	void SetIndexColor(int nIndex) {
-		IndexOfColor = nIndex;
-	}
+		ColPosX = 3;
+		ColPosY = 4;
+		ColSlice = 5;
+	}	
 
 	void SetCUFromLine(vector <string> lineSplit) {
-		if (7 < lineSplit.capacity()) {
-			address = atoi(lineSplit[0].c_str());
-			Heigth = atoi(lineSplit[1].c_str());
-			Widht = atoi(lineSplit[2].c_str());
-			Posx = atoi(lineSplit[3].c_str());
-			Posy = atoi(lineSplit[4].c_str());
-			Slice = atoi(lineSplit[5].c_str());
-			Depth = atoi(lineSplit[7].c_str());
+		if (ColPosX < lineSplit.capacity()) {
+			Posx = atoi(lineSplit[ColPosX].c_str());
+		}
+
+		if (ColPosY < lineSplit.capacity()) {
+			Posy = atoi(lineSplit[ColPosY].c_str());
+		}
+
+		if (ColSlice < lineSplit.capacity()) {
+			Slice = atoi(lineSplit[ColSlice].c_str());
 		}
 		
-		if (IndexOfColor < int(lineSplit.capacity()) ) {
-			m_Color = ConvertColor(lineSplit[IndexOfColor]);
-		}else{
-			m_Color = RGB(255, 0, 0);
+		if (ColColor < int(lineSplit.capacity()) ) {
+			Color = ConvertColor(lineSplit[ColColor]);
 		}
 	}
 };
@@ -133,9 +123,7 @@ public :
 	int Posx, Posy;
 };
 
-class ImageCalor {
-	int Widht, Heigth, Slice;
-	int m_CUSize;
+class ImageCalor {	
 	vector <CUIndexMap> HeatMapBmp;
 
 	FILE* hOutFile;
@@ -151,8 +139,10 @@ class ImageCalor {
 	uint32_t chromaWidth;
 
 public:
+	int Widht, Heigth, Slice, CUSize;
+
 	ImageCalor() {
-		m_CUSize   = 64;
+		CUSize   = 64;
 		Slice      = -1;
 		hOutFile   = 0;
 		appendMode = false;
@@ -185,19 +175,15 @@ public:
 		}
 	}
 
-	void SetNewVideoYUV(CU lineCU, string path) {
+	void SetNewVideoYUV(string path) {
 		cout << "SetVideo path: " << path << endl;
-
-		Slice = lineCU.GetSlice();
-		Widht = lineCU.GetWidht();
-		Heigth = lineCU.GetHeigth();
 
 		hOutFile = fopen(path.c_str(), appendMode ? "ab" : "wb");
 
-		lumaHeight = Heigth;
-		lumaWidth = Widht;
+		lumaHeight   = Heigth;
+		lumaWidth    = Widht;
 		chromaHeight = lumaHeight / 2;
-		chromaWidth = lumaWidth / 2;
+		chromaWidth  = lumaWidth / 2;
 
 		int nMult = Widht * Heigth;
 		yPixels = (uint8_t*)malloc(nMult * sizeof(uint8_t));
@@ -207,13 +193,6 @@ public:
 		ClearImageHeatmap();
 	}
 
-	void SetCuSize(int CUSize) {
-		m_CUSize = CUSize;
-	}
-
-	void SetSlice(CU lineCU) {
-		Slice = lineCU.GetSlice();
-	}
 	void SaveImageYUV(void) {
 		LOG_MESSAGE("CreateImageYUV");
 		uint8_t* yPtr, * uPtr, * vPtr;
@@ -239,16 +218,14 @@ public:
 
 	void AddCU(CU lineCU) {
 		bool bFound = false;
-		if (HeatMapBmp.capacity() > 0) {
-			for (int nIndex = 0; nIndex < int(HeatMapBmp.size()); nIndex++) {
-				if ((HeatMapBmp[nIndex].Posx == lineCU.Posx) && (HeatMapBmp[nIndex].Posy == lineCU.Posy)) {
-					bFound = true;
-				}
+		for (int nIndex = 0; nIndex < int(HeatMapBmp.size()); nIndex++) {
+			if ((HeatMapBmp[nIndex].Posx == lineCU.Posx) && (HeatMapBmp[nIndex].Posy == lineCU.Posy)) {
+				bFound = true;
 			}
 		}
 
 		if (!bFound) {
-			ColorYUV(lineCU.Posx, lineCU.Posy, lineCU.GetColor());
+			ColorYUV(lineCU.Posx, lineCU.Posy, lineCU.Color);
 			CUIndexMap cuMap;
 			cuMap.Posx = lineCU.Posx;
 			cuMap.Posy = lineCU.Posy;
@@ -270,22 +247,16 @@ public:
 		Gc = GetGValue(color);
 		Bc = GetBValue(color);		
 
-		for (uint32_t i = Posy; i < (Posy + m_CUSize); i++) {
-			for (uint32_t j = Posx; j < (Posx + m_CUSize); j++) {
+		for (uint32_t i = Posy; i < (Posy + CUSize); i++) {
+			for (uint32_t j = Posx; j < (Posx + CUSize); j++) {
 				nPosition = (i * lumaWidth) + j;
-				if (nPosition > (lumaHeight * lumaWidth)) {
-					cout << "ERRO LUMA " << nPosition << " Posy " << Posy << " Posx " << Posx << " H " << lumaHeight << " W " << lumaWidth << endl;
-				}
-				else {
-					yPtr[nPosition] = uint8_t(RGB2Y(Rc, Gc, Bc));
+				if (!(nPosition > (lumaHeight * lumaWidth))) {
+					yPtr[nPosition] = uint8_t(RGB2Y(Rc, Gc, Bc)); 
 				}
 
 				if ((i & yMask) == 0 && (j & xMask) == 0 && (i / 2) < chromaHeight && (j / 2) < chromaWidth) {
 					nPosition = ((i / 2) * chromaWidth) + (j / 2);
-					if (nPosition > (chromaHeight * chromaWidth)) {
-						cout << "ERRO CROMA" << nPosition << " H " << chromaHeight << " W " << chromaWidth << endl;
-					}
-					else {
+					if (!(nPosition > (chromaHeight * chromaWidth))) {
 						uPtr[nPosition] = uint8_t(RGB2U(Rc, Gc, Bc));
 						vPtr[nPosition] = uint8_t(RGB2V(Rc, Gc, Bc));
 					}
@@ -321,13 +292,20 @@ private :
 	string m_strDelim;
 	string m_strDirOut;
 	string strFileOut;
-	int    m_CUSize;
-public :
+public :	
+	int Widht, Heigth, CUSize;
+	int ColPosX, ColPosY, ColSlice;
+	
 	CreateHeatMap() {
+		ColPosX = 3;
+		ColPosY = 4;
+		ColSlice = 5;
+		Widht = 1280;
+		Heigth = 720;
 		strFileOut   = "64";
 		m_strDelim   = ",";
 		m_strDirOut  = "c:\\temp";
-		m_CUSize     = 64;
+		CUSize     = 64;
 	}
 
 	void SetFileOut(string strOut) {
@@ -338,8 +316,8 @@ public :
 		m_strDelim = delim;
 	}
 
-	void SetCuSize(int CUSize) {
-		m_CUSize = CUSize;
+	void SetCuSize(int LocalCUSize) {
+		CUSize = LocalCUSize;
 	}
 
 	string SetPath(string strDirOut) {
@@ -398,44 +376,43 @@ public :
 			getline(pfFIle, line);
 		}
 
-		//Popula matriz
-		bool bNewBmp = false;
-		bool bFirstLoop = true;
-		CU lineCU;
+		//Define variaveis básicas
 		ImageCalor HeatImage;
-		int nBmpCount = 0, nCountLineCU = 0;
+		HeatImage.Widht = this->Widht;
+		HeatImage.Heigth = this->Heigth;
+		HeatImage.Slice = -1;
+		HeatImage.CUSize = this->CUSize;
+		HeatImage.FreeMemory();		
+		HeatImage.SetNewVideoYUV(m_strDirOut + "\\out_" + strFileOut + ".yuv");
+		
+		//Inicia váriaveis locais
+		bool bFirstLoop = true;
+		CU lineCU;		
+		lineCU.ColColor = nIndexHeat;
 
-		HeatImage.FreeMemory();
-		lineCU.SetIndexColor(nIndexHeat);
-		HeatImage.SetCuSize(m_CUSize);
 		while (pfFIle.good()) {
 			getline(pfFIle, line);
 
 			lineSplit = split(line, m_strDelim);
 			lineCU.SetCUFromLine(lineSplit);
 
-			if (bFirstLoop) {
-				string nameArq = "\\out_" + strFileOut + ".yuv";
-				cout << nameArq << endl;
-				HeatImage.SetNewVideoYUV(lineCU, m_strDirOut + nameArq);				
+			if (bFirstLoop) {	
+				HeatImage.Slice = lineCU.Slice;
 				bFirstLoop = false;
 			}
-			
-			bNewBmp = HeatImage.IsSameSlice(lineCU.GetSlice());
-			nCountLineCU++;
-			if (!bNewBmp) {				
-				string aux = "New Bmp " + to_string(nBmpCount) + " countLine " + to_string(nCountLineCU) + "\n";
-				cout << aux << endl;
+						
+			//New Frame se slice for diferente
+			if (HeatImage.Slice != lineCU.Slice) {
 				HeatImage.SaveImageYUV();
-				HeatImage.SetSlice(lineCU);
+				HeatImage.Slice = lineCU.Slice;
 				HeatImage.Clear();
-				nCountLineCU = 0;
-				nBmpCount += 1;
 			}
+
 			HeatImage.AddCU(lineCU);
 		}
 		HeatImage.SaveImageYUV();
 		
 		pfFIle.close();
+		HeatImage.FreeMemory();
 	}
 };
