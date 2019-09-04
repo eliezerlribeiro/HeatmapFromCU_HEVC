@@ -145,7 +145,6 @@ public:
 		CUSize   = 64;
 		Slice      = -1;
 		hOutFile   = 0;
-		appendMode = false;
 	}
 
 	void ClearImageHeatmap(void) {
@@ -180,7 +179,7 @@ public:
 	void SetNewVideoYUV(string path) {
 		cout << "SetVideo path: " << path << endl;
 
-		hOutFile = fopen(path.c_str(), appendMode ? "ab" : "wb");
+		hOutFile = fopen(path.c_str(), "wb");
 
 		lumaHeight   = Heigth;
 		lumaWidth    = Widht;
@@ -209,13 +208,39 @@ public:
 		fwrite(uPtr, 1, nMult, hOutFile);
 		fwrite(vPtr, 1, nMult, hOutFile);
 
-		ClearImageHeatmap();
+		fseek(hOutFile, 0, SEEK_END);
 
 		LOG_MESSAGE("Done!");
 	}
 
+
+	void ClearSort(int localSlice) {
+		ClearImageHeatmap();
+
+		//Size por slice
+		long int SizeSlice = (lumaWidth * lumaHeight);
+		SizeSlice = SizeSlice + ((chromaWidth * chromaHeight) * 2);
+
+		long int nPosVideo = ftell(hOutFile);
+
+		int SlicePos = nPosVideo / SizeSlice;
+
+		if (SlicePos < localSlice) {
+			for (int i = 0; i < (localSlice - SlicePos); i++) {
+				//guarda a posição dos slices faltantes
+				SaveImageYUV();
+			}
+		}
+		else {
+			//posiciona o seek no inicio do slice que será escrito
+			long int NewPosSlice = localSlice * SizeSlice;
+			fseek(hOutFile, NewPosSlice, SEEK_SET);
+		}
+	}
+
 	void Clear() {
 		HeatMapBmp.clear();
+		ClearSort(Slice);
 	}
 
 	void AddCU(CU lineCU) {
@@ -402,6 +427,7 @@ public :
 
 			if (bFirstLoop) {	
 				HeatImage.Slice = lineCU.Slice;
+				HeatImage.Clear();
 				bFirstLoop = false;
 			}
 						
