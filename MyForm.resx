@@ -138,4 +138,27 @@
   <metadata name="openFD.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAUVJREFUOE+N080rRFEcxvF7jcmYjcHWJBtNKQuFzZCZspCNP8JKJCQvsfNWsqD8
+        N8qWBampWSFFycLGRlZ8Hz3d2+3S3Kc+Tfd3zm/OnHPuBK0ShmEeBT9mD00lTGMBO/6cQIen/B8m9eEY
+        L2jiCm+4xwF6PDUdBntxAjXvo4JJjOIQX9hG3i3JMFDDI1ZRRCfWoC9cximeUXVLMgxs4QYjLqnWhU2o
+        cQxPmEebp8SheIZL9Lv0G567sYEqrqFtpG/HA5ow6FIUatrOEB6wjvSNUBzHJ3ZdikJNX6CDbaDucjIM
+        zEJ7fcUKtGIZw1iE6ucouSUOxSno3r/xjg/c4gI6WL0LRxhwSxyKM7iDmvUT56AT34NW1LVqgeRLRCGH
+        OrRS1Ozh1mFyO5agN0yvavZmhQZFh6Q/y98nmyU0ays5P2ZMEPwAFqY5iQ8Gr+QAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="button2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAUVJREFUOE+N080rRFEcxvF7jcmYjcHWJBtNKQuFzZCZspCNP8JKJCQvsfNWsqD8
+        N8qWBampWSFFycLGRlZ8Hz3d2+3S3Kc+Tfd3zm/OnHPuBK0ShmEeBT9mD00lTGMBO/6cQIen/B8m9eEY
+        L2jiCm+4xwF6PDUdBntxAjXvo4JJjOIQX9hG3i3JMFDDI1ZRRCfWoC9cximeUXVLMgxs4QYjLqnWhU2o
+        cQxPmEebp8SheIZL9Lv0G567sYEqrqFtpG/HA5ow6FIUatrOEB6wjvSNUBzHJ3ZdikJNX6CDbaDucjIM
+        zEJ7fcUKtGIZw1iE6ucouSUOxSno3r/xjg/c4gI6WL0LRxhwSxyKM7iDmvUT56AT34NW1LVqgeRLRCGH
+        OrRS1Ozh1mFyO5agN0yvavZmhQZFh6Q/y98nmyU0ays5P2ZMEPwAFqY5iQ8Gr+QAAAAASUVORK5CYII=
+</value>
+  </data>
 </root>
