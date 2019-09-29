@@ -48,25 +48,27 @@ class CU {
 		return dToNormal * 100;
 	}
 
-	COLORREF ConvertColor(string param) {
+	COLORREF GetHeat(string param) {
 		double x = atof(param.c_str());
 
 		// Normaliza para ficar de 0 - 100
-		double xNormal = NormalizeToRange(x);
+		double nNormal = NormalizeToRange(x);
 
 		double c_FatorMult = 255 / 25;
 
 		//Retorna fator rgb (heat)
-		double dFatorRgb = c_FatorMult * (int(xNormal) % 25);
+		double dFatorRgb = c_FatorMult * (int(nNormal) % 25);
 		if (dFatorRgb > 255) {
 			dFatorRgb = 255;
 		}
 		else if (dFatorRgb < 0) {
 			dFatorRgb = 0;
-		}
+		} 
 
+				//		 Continua >>>>
+		
 		COLORREF c;
-		int spaceRgb = int(xNormal / 25);
+		int spaceRgb = int(nNormal / 25);
 		if (spaceRgb < 1) {
 			c = RGB(0, int(dFatorRgb), 255);
 		}
@@ -83,6 +85,7 @@ class CU {
 			c = RGB(255, 0, 0);
 		}
 		else {
+			//Caso de erro
 			c = RGB(128, 128, 128);
 		}
 
@@ -92,7 +95,8 @@ class CU {
 public:
 	int ValueMin, ValueMax;
 	int Posx, Posy, Slice;
-	int ColSlice, ColPosX, ColPosY, ColColor;
+	int Adress, Depth;
+	int ColSlice, ColPosX, ColPosY, ColColor, ColDepth;
 	COLORREF Color;
 
 	CU() {
@@ -101,9 +105,15 @@ public:
 		ColPosX = 3;
 		ColPosY = 4;
 		ColSlice = 5;
+		ColDepth = 7;
+		Adress = -1;
 	}
 
 	void SetCUFromLine(vector <string> lineSplit) {
+		if (ColDepth < lineSplit.capacity()) {
+			Depth = atoi(lineSplit[ColDepth].c_str());
+		}		
+
 		if (ColPosX < lineSplit.capacity()) {
 			Posx = atoi(lineSplit[ColPosX].c_str());
 		}
@@ -117,14 +127,74 @@ public:
 		}
 
 		if (ColColor < int(lineSplit.capacity())) {
-			Color = ConvertColor(lineSplit[ColColor]);
+			Color = GetHeat(lineSplit[ColColor]);
 		}
 	}
 };
 
 class CUIndexMap {
+	const int nDepth0 = 64;
+	const int nDepth1 = 16;
+	const int nDepth2 = 4;
+	const int nDepth3 = 1;
+
+	const int mX[4] = {0, 32,  0, 32};
+	const int mY[4] = {0,  0, 32, 32};
+
 public :
 	int Posx, Posy;
+	int nCountDepth1, nCountDepth2, nCountDepth3;
+	int CUSize;
+	
+	CUIndexMap() {
+		nCountDepth1 = 0;
+		nCountDepth2 = 0;
+		nCountDepth3 = 0;
+		CUSize		 = 64;
+	}
+
+	void SetNewPositionXY(int nX, int nY, int nDepth) {		
+		int position = (nCountDepth1 * nDepth1) + (nCountDepth2 * nDepth2) + (nCountDepth3 * nDepth3);
+
+		//Calcula o X e Y da posição atual
+		int posM;
+		int resY = 0;
+		int resX = 0;
+
+		posM = floor(position / 16);
+		resY = mY[posM];
+		resX = mX[posM];
+
+		posM = floor((position % 16) / 4);
+
+		resY = (mY[posM] / 2) + resY;
+		resX = (mX[posM] / 2) + resX;
+
+		posM = (position % 16) % 4;
+		resY = (mY[posM] / 4) + resY;
+		resX = (mX[posM] / 4) + resX;
+
+		
+		Posx = nX + resX;
+		Posy = nY + resY;	
+
+		switch (nDepth) {
+		case 1:
+			nCountDepth1++;
+			CUSize = 32;
+			break;
+
+		case 2:
+			nCountDepth2++;
+			CUSize = 16;
+			break;
+
+		case 3:
+			nCountDepth3++;
+			CUSize = 8;
+			break;
+		}
+	}
 };
 
 class ImageCalor {
@@ -134,8 +204,6 @@ class ImageCalor {
 
 	uint8_t* yPixels, * uPixels, * vPixels;	
 
-	uint32_t lumaHeight;
-	uint32_t lumaWidth;
 	uint32_t chromaHeight;
 	uint32_t chromaWidth;
 
@@ -148,7 +216,7 @@ public:
 		hOutFile   = 0;
 	}
 
-	void ClearImageHeatmap(void) {
+	void ClearImageHeatMap(void) {
 		cout << "Clear: " << endl;
 		// Pointers we are working with
 		uint8_t Rc, Gc, Bc;
@@ -160,8 +228,8 @@ public:
 
 		COLORREF rgbPixels;
 
-		for (y = 0; y < lumaHeight; y++) {
-			for (x = 0; x < lumaWidth; x++) {
+		for (y = 0; y < Height; y++) {
+			for (x = 0; x < Width; x++) {
 				rgbPixels = RGB(50, 50, 50);
 				Rc = GetRValue(rgbPixels);
 				Gc = GetGValue(rgbPixels);
@@ -182,10 +250,8 @@ public:
 
 		hOutFile = fopen(path.c_str(), "wb");
 
-		lumaHeight   = Height;
-		lumaWidth    = Width;
-		chromaHeight = lumaHeight / 2;
-		chromaWidth  = lumaWidth / 2;
+		chromaHeight = Height / 2;
+		chromaWidth  = Width / 2;
 
 		int nMult      = Width * Height;
 		int nMultChroma = chromaHeight * chromaWidth;
@@ -193,7 +259,7 @@ public:
 		uPixels = (uint8_t*)malloc(nMultChroma * sizeof(uint8_t));
 		vPixels = (uint8_t*)malloc(nMultChroma * sizeof(uint8_t));
 
-		ClearImageHeatmap();
+		ClearImageHeatMap();
 	}
 
 	void SaveImageYUV(uint8_t* yPix, uint8_t* uPix, uint8_t* vPix) {
@@ -203,7 +269,7 @@ public:
 		uPtr = uPix;
 		vPtr = vPix;
 
-		int nMult = lumaWidth * lumaHeight;
+		int nMult = Width * Height;
 		fwrite(yPtr, 1, nMult, hOutFile);
 		// Simply write U and V planes
 		nMult = chromaWidth * chromaHeight;
@@ -220,16 +286,12 @@ public:
 	}
 
 	void ClearSort(int localSlice) {
-		ClearImageHeatmap();
-
+		ClearImageHeatMap();
 		//Size por slice
-		long int SizeSlice = (lumaWidth * lumaHeight);
+		long int SizeSlice = (Width * Height);
 		SizeSlice = SizeSlice + ((chromaWidth * chromaHeight) * 2);
-
 		long int nPosVideo = ftell(hOutFile);
-
 		int SlicePos = nPosVideo / SizeSlice;
-
 		if (SlicePos < localSlice) {
 			for (int i = 0; i < (localSlice - SlicePos); i++) {
 				//guarda a posição dos slices faltantes
@@ -252,20 +314,30 @@ public:
 		bool bFound = false;
 		for (int nIndex = 0; nIndex < int(HeatMapBmp.size()); nIndex++) {
 			if ((HeatMapBmp[nIndex].Posx == lineCU.Posx) && (HeatMapBmp[nIndex].Posy == lineCU.Posy)) {
+				HeatMapBmp[nIndex].SetNewPositionXY(lineCU.Posx, lineCU.Posy, lineCU.Depth);
+				ColorYUV(HeatMapBmp[nIndex].Posx, HeatMapBmp[nIndex].Posy, lineCU.Color, HeatMapBmp[nIndex].CUSize);				
+
+				HeatMapBmp[nIndex].Posx = lineCU.Posx;
+				HeatMapBmp[nIndex].Posy = lineCU.Posy;
+
 				bFound = true;
+				break;
 			}
 		}
 
 		if (!bFound) {
-			ColorYUV(lineCU.Posx, lineCU.Posy, lineCU.Color);
 			CUIndexMap cuMap;
+			cuMap.SetNewPositionXY(lineCU.Posx, lineCU.Posy, lineCU.Depth);
+			ColorYUV(cuMap.Posx, cuMap.Posy, lineCU.Color, cuMap.CUSize);
+						
 			cuMap.Posx = lineCU.Posx;
 			cuMap.Posy = lineCU.Posy;
+
 			HeatMapBmp.push_back(cuMap);
 		}
 	}
 
-	void ColorYUV(uint32_t Posx, uint32_t Posy, COLORREF color) {
+	void ColorYUV(uint32_t Posx, uint32_t Posy, COLORREF color, int localCUSize) {
 		uint8_t* yPtr, * uPtr, * vPtr;
 		uint8_t Rc, Gc, Bc;
 		uint32_t xMask = 1, yMask = 1;
@@ -279,10 +351,10 @@ public:
 		Gc = GetGValue(color);
 		Bc = GetBValue(color);		
 
-		for (uint32_t i = Posy; i < (Posy + CUSize); i++) {
-			for (uint32_t j = Posx; j < (Posx + CUSize); j++) {
-				nPosition = (i * lumaWidth) + j;
-				if (!(nPosition > (lumaHeight * lumaWidth))) {
+		for (uint32_t i = Posy; i < (Posy + localCUSize); i++) {
+			for (uint32_t j = Posx; j < (Posx + localCUSize); j++) {
+				nPosition = (i * Width) + j;
+				if (!(nPosition > (Height * Width))) {
 					yPtr[nPosition] = uint8_t(RGB2Y(Rc, Gc, Bc)); 
 				}
 
@@ -415,11 +487,13 @@ class BlendTwoVideos {
 public :
 	int Height, Width, CUSize;
 
-	void StartBlend(string pathOut, string arqOrig, string arqHeat) {
-				
+	void StartBlend(string pathOut, string arqOrig, string arqHeat) {				
+		chromaHeight = Height / 2;
+		chromaWidth = Width / 2;
+
 		//Define variaveis básicas		
-		BlendImage.Width = this->Width;
-		BlendImage.Height = this->Height;
+		BlendImage.Width = Width;
+		BlendImage.Height = Height;
 		BlendImage.FreeMemory();
 		BlendImage.SetNewVideoYUV(pathOut + "\\out_dissolved.yuv");
 
@@ -443,7 +517,6 @@ public :
 
 
 		if (inHeatMap.is_open() && inOriginal.is_open()) {	
-
 			while (inHeatMap.good() && inOriginal.good()) {
 				BlendFrarmes(inHeatMap, inOriginal, sfHeatMap, sfOriginal);
 			}
@@ -470,12 +543,13 @@ private :
 	string strFileOut;
 public :	
 	int Width, Height, CUSize;
-	int ColPosX, ColPosY, ColSlice;
+	int ColPosX, ColPosY, ColSlice, ColDepth;
 	
 	CreateHeatMap() {
 		ColPosX = 3;
 		ColPosY = 4;
 		ColSlice = 5;
+		ColDepth = 7;
 		Width = 1280;
 		Height = 720;
 		strFileOut   = "64";
@@ -490,10 +564,6 @@ public :
 
 	void SetDelim(string delim) {
 		m_strDelim = delim;
-	}
-
-	void SetCuSize(int LocalCUSize) {
-		CUSize = LocalCUSize;
 	}
 
 	string SetPath(string strDirOut) {
@@ -564,7 +634,12 @@ public :
 		//Inicia váriaveis locais
 		bool bFirstLoop = true;
 		CU lineCU;		
-		lineCU.ColColor = nIndexHeat;
+		lineCU.ColColor = nIndexHeat;	
+		//lineCU.ColSlice = ColSlice;
+		//lineCU.ColPosX = ColPosX;
+		//lineCU.ColPosY = ColPosY;
+		lineCU.ColDepth = ColDepth;
+		
 		lineCU.ValueMin = nValueMin;
 		lineCU.ValueMax = nValueMax;
 

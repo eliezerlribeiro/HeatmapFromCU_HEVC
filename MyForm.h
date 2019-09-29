@@ -89,12 +89,12 @@ namespace HeatMapForm {
 	private: System::Windows::Forms::Label^ lblCuSize;
 	private: System::Windows::Forms::NumericUpDown^ udCuSize;
 
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Adress;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Height;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Width;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ PosX;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ PosY;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Slice;
+
+
+
+
+
+
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::NumericUpDown^ udHeight;
 
@@ -110,7 +110,8 @@ namespace HeatMapForm {
 
 
 	private: System::Windows::Forms::Label^ label7;
-	private: System::Windows::Forms::NumericUpDown^ udColSlice;
+	private: System::Windows::Forms::NumericUpDown^ udColFrame;
+
 	private: System::Windows::Forms::Label^ label8;
 	private: System::Windows::Forms::TextBox^ edtArqMescUm;
 	private: System::Windows::Forms::TextBox^ edtArqMescDois;
@@ -123,6 +124,18 @@ namespace HeatMapForm {
 	private: System::Windows::Forms::Label^ label10;
 	private: System::Windows::Forms::Label^ label11;
 	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Adress;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Height;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Width;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ PosX;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ PosY;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Slice;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Depth;
+private: System::Windows::Forms::Label^ label12;
+private: System::Windows::Forms::Label^ label13;
+private: System::Windows::Forms::NumericUpDown^ udColDepth;
+
+
 
 
 
@@ -152,6 +165,7 @@ namespace HeatMapForm {
 			this->PosX = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->PosY = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Slice = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Depth = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->udValueMin = (gcnew System::Windows::Forms::NumericUpDown());
 			this->udValueMax = (gcnew System::Windows::Forms::NumericUpDown());
 			this->lblMin = (gcnew System::Windows::Forms::Label());
@@ -179,7 +193,7 @@ namespace HeatMapForm {
 			this->udColPosX = (gcnew System::Windows::Forms::NumericUpDown());
 			this->udColPosY = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label7 = (gcnew System::Windows::Forms::Label());
-			this->udColSlice = (gcnew System::Windows::Forms::NumericUpDown());
+			this->udColFrame = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->edtArqMescUm = (gcnew System::Windows::Forms::TextBox());
 			this->edtArqMescDois = (gcnew System::Windows::Forms::TextBox());
@@ -190,6 +204,9 @@ namespace HeatMapForm {
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->label11 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->label13 = (gcnew System::Windows::Forms::Label());
+			this->udColDepth = (gcnew System::Windows::Forms::NumericUpDown());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->gridHeader))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udValueMin))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udValueMax))->BeginInit();
@@ -200,15 +217,16 @@ namespace HeatMapForm {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udWidth))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColPosX))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColPosY))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColSlice))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColFrame))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColDepth))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// gridHeader
 			// 
 			this->gridHeader->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->gridHeader->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(6) {
+			this->gridHeader->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(7) {
 				this->Adress, this->Height,
-					this->Width, this->PosX, this->PosY, this->Slice
+					this->Width, this->PosX, this->PosY, this->Slice, this->Depth
 			});
 			this->gridHeader->Location = System::Drawing::Point(11, 54);
 			this->gridHeader->Name = L"gridHeader";
@@ -246,10 +264,15 @@ namespace HeatMapForm {
 			this->Slice->HeaderText = L"Slice";
 			this->Slice->Name = L"Slice";
 			// 
+			// Depth
+			// 
+			this->Depth->HeaderText = L"Depth";
+			this->Depth->Name = L"Depth";
+			// 
 			// udValueMin
 			// 
 			this->udValueMin->DecimalPlaces = 2;
-			this->udValueMin->Location = System::Drawing::Point(79, 348);
+			this->udValueMin->Location = System::Drawing::Point(79, 384);
 			this->udValueMin->Name = L"udValueMin";
 			this->udValueMin->Size = System::Drawing::Size(76, 20);
 			this->udValueMin->TabIndex = 6;
@@ -257,17 +280,17 @@ namespace HeatMapForm {
 			// udValueMax
 			// 
 			this->udValueMax->DecimalPlaces = 2;
-			this->udValueMax->Location = System::Drawing::Point(218, 350);
+			this->udValueMax->Location = System::Drawing::Point(218, 386);
 			this->udValueMax->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000, 0, 0, 0 });
 			this->udValueMax->Name = L"udValueMax";
 			this->udValueMax->Size = System::Drawing::Size(76, 20);
 			this->udValueMax->TabIndex = 7;
-			this->udValueMax->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 100, 0, 0, 0 });
+			this->udValueMax->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 4, 0, 0, 0 });
 			// 
 			// lblMin
 			// 
 			this->lblMin->AutoSize = true;
-			this->lblMin->Location = System::Drawing::Point(31, 350);
+			this->lblMin->Location = System::Drawing::Point(31, 386);
 			this->lblMin->Name = L"lblMin";
 			this->lblMin->Size = System::Drawing::Size(42, 13);
 			this->lblMin->TabIndex = 8;
@@ -276,7 +299,7 @@ namespace HeatMapForm {
 			// lblMax
 			// 
 			this->lblMax->AutoSize = true;
-			this->lblMax->Location = System::Drawing::Point(171, 350);
+			this->lblMax->Location = System::Drawing::Point(171, 386);
 			this->lblMax->Name = L"lblMax";
 			this->lblMax->Size = System::Drawing::Size(46, 13);
 			this->lblMax->TabIndex = 9;
@@ -298,7 +321,7 @@ namespace HeatMapForm {
 			// 
 			// btnCreateHeatmap
 			// 
-			this->btnCreateHeatmap->Location = System::Drawing::Point(387, 402);
+			this->btnCreateHeatmap->Location = System::Drawing::Point(387, 438);
 			this->btnCreateHeatmap->Name = L"btnCreateHeatmap";
 			this->btnCreateHeatmap->Size = System::Drawing::Size(57, 23);
 			this->btnCreateHeatmap->TabIndex = 11;
@@ -337,7 +360,7 @@ namespace HeatMapForm {
 			// lblColColor
 			// 
 			this->lblColColor->AutoSize = true;
-			this->lblColColor->Location = System::Drawing::Point(307, 250);
+			this->lblColColor->Location = System::Drawing::Point(174, 282);
 			this->lblColColor->Name = L"lblColColor";
 			this->lblColColor->Size = System::Drawing::Size(84, 13);
 			this->lblColColor->TabIndex = 15;
@@ -345,11 +368,11 @@ namespace HeatMapForm {
 			// 
 			// udColHeat
 			// 
-			this->udColHeat->Location = System::Drawing::Point(397, 248);
+			this->udColHeat->Location = System::Drawing::Point(264, 280);
 			this->udColHeat->Name = L"udColHeat";
 			this->udColHeat->Size = System::Drawing::Size(47, 20);
 			this->udColHeat->TabIndex = 14;
-			this->udColHeat->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 8, 0, 0, 0 });
+			this->udColHeat->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 7, 0, 0, 0 });
 			// 
 			// edtDelim
 			// 
@@ -370,7 +393,7 @@ namespace HeatMapForm {
 			// 
 			// pathFolderVideo
 			// 
-			this->pathFolderVideo->Location = System::Drawing::Point(25, 405);
+			this->pathFolderVideo->Location = System::Drawing::Point(25, 441);
 			this->pathFolderVideo->Name = L"pathFolderVideo";
 			this->pathFolderVideo->Size = System::Drawing::Size(353, 20);
 			this->pathFolderVideo->TabIndex = 18;
@@ -378,7 +401,7 @@ namespace HeatMapForm {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(12, 382);
+			this->label2->Location = System::Drawing::Point(12, 418);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(233, 13);
 			this->label2->TabIndex = 19;
@@ -386,16 +409,16 @@ namespace HeatMapForm {
 			// 
 			// memoLogger
 			// 
-			this->memoLogger->Location = System::Drawing::Point(11, 455);
+			this->memoLogger->Location = System::Drawing::Point(11, 491);
 			this->memoLogger->Name = L"memoLogger";
-			this->memoLogger->Size = System::Drawing::Size(677, 99);
+			this->memoLogger->Size = System::Drawing::Size(713, 99);
 			this->memoLogger->TabIndex = 20;
 			this->memoLogger->Text = L"";
 			// 
 			// lblCuSize
 			// 
 			this->lblCuSize->AutoSize = true;
-			this->lblCuSize->Location = System::Drawing::Point(31, 298);
+			this->lblCuSize->Location = System::Drawing::Point(31, 334);
 			this->lblCuSize->Name = L"lblCuSize";
 			this->lblCuSize->Size = System::Drawing::Size(73, 13);
 			this->lblCuSize->TabIndex = 22;
@@ -403,7 +426,7 @@ namespace HeatMapForm {
 			// 
 			// udCuSize
 			// 
-			this->udCuSize->Location = System::Drawing::Point(110, 293);
+			this->udCuSize->Location = System::Drawing::Point(110, 329);
 			this->udCuSize->Name = L"udCuSize";
 			this->udCuSize->Size = System::Drawing::Size(51, 20);
 			this->udCuSize->TabIndex = 21;
@@ -412,7 +435,7 @@ namespace HeatMapForm {
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(171, 298);
+			this->label3->Location = System::Drawing::Point(171, 334);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(34, 13);
 			this->label3->TabIndex = 24;
@@ -420,7 +443,7 @@ namespace HeatMapForm {
 			// 
 			// udHeight
 			// 
-			this->udHeight->Location = System::Drawing::Point(211, 296);
+			this->udHeight->Location = System::Drawing::Point(211, 332);
 			this->udHeight->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000, 0, 0, 0 });
 			this->udHeight->Name = L"udHeight";
 			this->udHeight->Size = System::Drawing::Size(51, 20);
@@ -430,7 +453,7 @@ namespace HeatMapForm {
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(275, 298);
+			this->label4->Location = System::Drawing::Point(275, 334);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(46, 13);
 			this->label4->TabIndex = 26;
@@ -438,7 +461,7 @@ namespace HeatMapForm {
 			// 
 			// udWidth
 			// 
-			this->udWidth->Location = System::Drawing::Point(327, 298);
+			this->udWidth->Location = System::Drawing::Point(327, 334);
 			this->udWidth->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000, 0, 0, 0 });
 			this->udWidth->Name = L"udWidth";
 			this->udWidth->Size = System::Drawing::Size(51, 20);
@@ -450,13 +473,13 @@ namespace HeatMapForm {
 			this->label5->AutoSize = true;
 			this->label5->Location = System::Drawing::Point(127, 252);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(71, 13);
+			this->label5->Size = System::Drawing::Size(58, 13);
 			this->label5->TabIndex = 28;
-			this->label5->Text = L"Posição X - Y";
+			this->label5->Text = L"Posição: X";
 			// 
 			// udColPosX
 			// 
-			this->udColPosX->Location = System::Drawing::Point(201, 248);
+			this->udColPosX->Location = System::Drawing::Point(191, 248);
 			this->udColPosX->Name = L"udColPosX";
 			this->udColPosX->Size = System::Drawing::Size(47, 20);
 			this->udColPosX->TabIndex = 27;
@@ -464,7 +487,7 @@ namespace HeatMapForm {
 			// 
 			// udColPosY
 			// 
-			this->udColPosY->Location = System::Drawing::Point(254, 248);
+			this->udColPosY->Location = System::Drawing::Point(264, 250);
 			this->udColPosY->Name = L"udColPosY";
 			this->udColPosY->Size = System::Drawing::Size(47, 20);
 			this->udColPosY->TabIndex = 29;
@@ -473,19 +496,19 @@ namespace HeatMapForm {
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(31, 251);
+			this->label7->Location = System::Drawing::Point(19, 252);
 			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(30, 13);
+			this->label7->Size = System::Drawing::Size(42, 13);
 			this->label7->TabIndex = 32;
-			this->label7->Text = L"Slice";
+			this->label7->Text = L"Quadro";
 			// 
-			// udColSlice
+			// udColFrame
 			// 
-			this->udColSlice->Location = System::Drawing::Point(67, 248);
-			this->udColSlice->Name = L"udColSlice";
-			this->udColSlice->Size = System::Drawing::Size(47, 20);
-			this->udColSlice->TabIndex = 31;
-			this->udColSlice->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
+			this->udColFrame->Location = System::Drawing::Point(67, 248);
+			this->udColFrame->Name = L"udColFrame";
+			this->udColFrame->Size = System::Drawing::Size(47, 20);
+			this->udColFrame->TabIndex = 31;
+			this->udColFrame->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
 			// 
 			// label8
 			// 
@@ -545,14 +568,14 @@ namespace HeatMapForm {
 			this->label9->AutoSize = true;
 			this->label9->Location = System::Drawing::Point(12, 225);
 			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(260, 13);
+			this->label9->Size = System::Drawing::Size(169, 13);
 			this->label9->TabIndex = 39;
-			this->label9->Text = L"Posicionamento dos atributos  presentes nas colunas:";
+			this->label9->Text = L"Coluna representada pelo atributo:";
 			// 
 			// label10
 			// 
 			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(12, 280);
+			this->label10->Location = System::Drawing::Point(12, 316);
 			this->label10->Name = L"label10";
 			this->label10->Size = System::Drawing::Size(98, 13);
 			this->label10->TabIndex = 40;
@@ -561,7 +584,7 @@ namespace HeatMapForm {
 			// label11
 			// 
 			this->label11->AutoSize = true;
-			this->label11->Location = System::Drawing::Point(12, 328);
+			this->label11->Location = System::Drawing::Point(12, 364);
 			this->label11->Name = L"label11";
 			this->label11->Size = System::Drawing::Size(303, 13);
 			this->label11->TabIndex = 41;
@@ -570,17 +593,46 @@ namespace HeatMapForm {
 			// label6
 			// 
 			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(10, 439);
+			this->label6->Location = System::Drawing::Point(10, 475);
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(88, 13);
 			this->label6->TabIndex = 42;
 			this->label6->Text = L"Lista de eventos:";
 			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Location = System::Drawing::Point(244, 252);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(14, 13);
+			this->label12->TabIndex = 43;
+			this->label12->Text = L"Y";
+			// 
+			// label13
+			// 
+			this->label13->AutoSize = true;
+			this->label13->Location = System::Drawing::Point(14, 279);
+			this->label13->Name = L"label13";
+			this->label13->Size = System::Drawing::Size(47, 13);
+			this->label13->TabIndex = 45;
+			this->label13->Text = L"Profund.";
+			// 
+			// udColDepth
+			// 
+			this->udColDepth->Location = System::Drawing::Point(67, 277);
+			this->udColDepth->Name = L"udColDepth";
+			this->udColDepth->Size = System::Drawing::Size(47, 20);
+			this->udColDepth->TabIndex = 44;
+			this->udColDepth->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 7, 0, 0, 0 });
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(736, 566);
+			this->ClientSize = System::Drawing::Size(736, 596);
+			this->Controls->Add(this->label13);
+			this->Controls->Add(this->udColDepth);
+			this->Controls->Add(this->label12);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->label11);
 			this->Controls->Add(this->label10);
@@ -592,7 +644,7 @@ namespace HeatMapForm {
 			this->Controls->Add(this->label8);
 			this->Controls->Add(this->edtArqMescUm);
 			this->Controls->Add(this->label7);
-			this->Controls->Add(this->udColSlice);
+			this->Controls->Add(this->udColFrame);
 			this->Controls->Add(this->udColPosY);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->udColPosX);
@@ -631,7 +683,8 @@ namespace HeatMapForm {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udWidth))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColPosX))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColPosY))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColSlice))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColFrame))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColDepth))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -725,7 +778,8 @@ void RunHeatMap() {
 	CreateHeatMap chmMap;
 	chmMap.ColPosX  = int(udColPosX->Value);
 	chmMap.ColPosY  = int(udColPosY->Value);
-	chmMap.ColSlice = int(udColSlice->Value);
+	chmMap.ColSlice = int(udColFrame->Value);
+	chmMap.ColDepth = int(udColDepth->Value);
 	chmMap.Width = int(udWidth->Value);
 	chmMap.Height = int(udHeight->Value);
 	chmMap.CUSize   = int(udCuSize->Value);		
@@ -767,8 +821,11 @@ private: System::Void Button1_Click_1(System::Object^ sender, System::EventArgs^
 	string strVideoDois  = msclr::interop::marshal_as<std::string>(edtArqMescDois->Text);
 	string strPathFolder = msclr::interop::marshal_as<std::string>(pathFolderVideo->Text);
 	
+	memoLogger->AppendText("Blend Start\n");
+	memoLogger->AppendText("Width : " + udWidth->Value + " Height : " + udHeight->Value +  "\n");
 	videoOut.StartBlend(strPathFolder, strVideoUm, strVideoDois);
 
+	memoLogger->AppendText("Blend End\n");
 }
 private: System::Void Button1_Click_2(System::Object^ sender, System::EventArgs^ e) {
 	openFD->Title = "Encontrar arquivo para mesclar";
