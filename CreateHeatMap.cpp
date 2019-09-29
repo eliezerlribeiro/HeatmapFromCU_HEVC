@@ -25,8 +25,9 @@
 
 #include <windowsx.h>
 
-#define LOG_MESSAGE(...) {printf(__VA_ARGS__); printf("\n");}
-#define LOG_ERROR(...) {printf("ERROR: "); printf(__VA_ARGS__); printf("\n");}
+#define LOG_MESSAGE(...) {(void)0;}
+
+//#define LOG_MESSAGE(...) {printf(__VA_ARGS__);printf("\n");}
 
 // RGB -> YUV
 #define CLIP(X) ( (X) > 255 ? 255 : (X) < 0 ? 0 : X)
@@ -37,12 +38,18 @@
 using std::vector;
 using std::string;
 using std::wstring;
-using std::cout;
 using std::endl;
 using std::ifstream;
 using std::to_string;
 
 class CU {
+	const int c_nDepth[4]	 = { 64, 16,  4, 1 };	// MAximo de cus 8x8	
+	const int c_CuSize[4]	 = { 64, 32, 16, 8 };	// MAximo de cus 8x8	
+	const int c_mX[4]		 = { 0,  32,  0, 32 };
+	const int c_mY[4]	     = { 0,   0, 32, 32 };	
+
+	int nCountDepth[4];
+
 	double NormalizeToRange(double dToNormal) {
 		dToNormal = (dToNormal - ValueMin) / (ValueMax - ValueMin);
 		return dToNormal * 100;
@@ -64,8 +71,6 @@ class CU {
 		else if (dFatorRgb < 0) {
 			dFatorRgb = 0;
 		} 
-
-				//		 Continua >>>>
 		
 		COLORREF c;
 		int spaceRgb = int(nNormal / 25);
@@ -88,118 +93,92 @@ class CU {
 			//Caso de erro
 			c = RGB(128, 128, 128);
 		}
-
 		return c;
+	}
+
+	void ClearCont(void) {
+		for (int i = 0; i < 4; i++){
+			nCountDepth[i] = 0;			
+		}			
 	}
 
 public:
 	int ValueMin, ValueMax;
-	int Posx, Posy, Slice;
-	int Adress, Depth;
-	int ColSlice, ColPosX, ColPosY, ColColor, ColDepth;
+	int Posx, Posy, Frame, Depth;
+	int ColFrame, ColPosX, ColPosY, ColColor, ColDepth;
+	int PosCuX, PosCuY;
 	COLORREF Color;
 
 	CU() {
 		ValueMax = 100;
 		ValueMin = 0;
-		ColPosX = 3;
-		ColPosY = 4;
-		ColSlice = 5;
+		ColPosX  = 3;
+		ColPosY  = 4;
+		ColFrame = 5;
 		ColDepth = 7;
-		Adress = -1;
+		Frame	 = -1;
+		Posx	 = -1;
+		Posy	 = -1;
+
+		ClearCont();
 	}
 
-	void SetCUFromLine(vector <string> lineSplit) {
-		if (ColDepth < lineSplit.capacity()) {
-			Depth = atoi(lineSplit[ColDepth].c_str());
-		}		
-
-		if (ColPosX < lineSplit.capacity()) {
-			Posx = atoi(lineSplit[ColPosX].c_str());
-		}
-
-		if (ColPosY < lineSplit.capacity()) {
-			Posy = atoi(lineSplit[ColPosY].c_str());
-		}
-
-		if (ColSlice < lineSplit.capacity()) {
-			Slice = atoi(lineSplit[ColSlice].c_str());
-		}
-
-		if (ColColor < int(lineSplit.capacity())) {
-			Color = GetHeat(lineSplit[ColColor]);
-		}
-	}
-};
-
-class CUIndexMap {
-	const int nDepth0 = 64;
-	const int nDepth1 = 16;
-	const int nDepth2 = 4;
-	const int nDepth3 = 1;
-
-	const int mX[4] = {0, 32,  0, 32};
-	const int mY[4] = {0,  0, 32, 32};
-
-public :
-	int Posx, Posy;
-	int nCountDepth1, nCountDepth2, nCountDepth3;
-	int CUSize;
-	
-	CUIndexMap() {
-		nCountDepth1 = 0;
-		nCountDepth2 = 0;
-		nCountDepth3 = 0;
-		CUSize		 = 64;
+	int CUSize(void) {
+		return c_CuSize[Depth];
 	}
 
-	void SetNewPositionXY(int nX, int nY, int nDepth) {		
-		int position = (nCountDepth1 * nDepth1) + (nCountDepth2 * nDepth2) + (nCountDepth3 * nDepth3);
+	void SetNewPositionXY(int nX, int nY, int nDepth) {
+		int position = (nCountDepth[1] * c_nDepth[1]) + (nCountDepth[2] * c_nDepth[2]) + (nCountDepth[3] * c_nDepth[3]);
+
+		if (position > 64) {
+			LOG_MESSAGE("ERRO SetNewPositionXY : Posição > 64");
+			PosCuY = nY;
+			PosCuX = nX;
+			return;
+		}
 
 		//Calcula o X e Y da posição atual
-		int posM;
-		int resY = 0;
-		int resX = 0;
-
+		int posM;		
 		posM = floor(position / 16);
-		resY = mY[posM];
-		resX = mX[posM];
+		PosCuY = c_mY[posM];
+		PosCuX = c_mX[posM];
 
 		posM = floor((position % 16) / 4);
 
-		resY = (mY[posM] / 2) + resY;
-		resX = (mX[posM] / 2) + resX;
+		PosCuY = (c_mY[posM] / 2) + PosCuY;
+		PosCuX = (c_mX[posM] / 2) + PosCuX;
 
 		posM = (position % 16) % 4;
-		resY = (mY[posM] / 4) + resY;
-		resX = (mX[posM] / 4) + resX;
+		PosCuY = (c_mY[posM] / 4) + PosCuY;
+		PosCuX = (c_mX[posM] / 4) + PosCuX;
 
+		PosCuX = nX + PosCuX;
+		PosCuY = nY + PosCuY;
+
+		nCountDepth[nDepth]++;	
+	}
+
+	void SetCUFromLine(vector <string> lineSplit) {
+		int newPosX = 0;
+		int newPosY = 0;
 		
-		Posx = nX + resX;
-		Posy = nY + resY;	
+		Depth   = atoi(lineSplit[ColDepth].c_str());
+		newPosX = atoi(lineSplit[ColPosX].c_str());
+		newPosY = atoi(lineSplit[ColPosY].c_str());
+		Frame   = atoi(lineSplit[ColFrame].c_str());
+		Color   = GetHeat(lineSplit[ColColor]);
 
-		switch (nDepth) {
-		case 1:
-			nCountDepth1++;
-			CUSize = 32;
-			break;
-
-		case 2:
-			nCountDepth2++;
-			CUSize = 16;
-			break;
-
-		case 3:
-			nCountDepth3++;
-			CUSize = 8;
-			break;
+		if ((newPosX != Posx) || (newPosY != Posy)) {
+			ClearCont();
 		}
+		
+		Posx = newPosX;
+		Posy = newPosY;
+		SetNewPositionXY(Posx, Posy, Depth);
 	}
 };
 
-class ImageCalor {
-	vector <CUIndexMap> HeatMapBmp;
-
+class ImageCalor {	
 	FILE* hOutFile;
 
 	uint8_t* yPixels, * uPixels, * vPixels;	
@@ -208,16 +187,16 @@ class ImageCalor {
 	uint32_t chromaWidth;
 
 public:
-	int Width, Height, Slice, CUSize;
+	int Width, Height, Frame, CUSize;
 
 	ImageCalor() {
-		CUSize   = 64;
-		Slice      = -1;
-		hOutFile   = 0;
+		CUSize    = 64;
+		Frame     = -1;
+		hOutFile  = 0;
 	}
 
 	void ClearImageHeatMap(void) {
-		cout << "Clear: " << endl;
+		LOG_MESSAGE("Clear");
 		// Pointers we are working with
 		uint8_t Rc, Gc, Bc;
 		uint32_t x, y, xMask = 1, yMask = 1;
@@ -246,8 +225,8 @@ public:
 	}
 
 	void SetNewVideoYUV(string path) {
-		cout << "SetVideo path: " << path << endl;
-
+		LOG_MESSAGE("SetVideo path : " + path);
+		
 		hOutFile = fopen(path.c_str(), "wb");
 
 		chromaHeight = Height / 2;
@@ -285,55 +264,23 @@ public:
 		SaveImageYUV(yPixels, uPixels, vPixels);	
 	}
 
-	void ClearSort(int localSlice) {
+	void ClearSort(void) {
 		ClearImageHeatMap();
 		//Size por slice
-		long int SizeSlice = (Width * Height);
-		SizeSlice = SizeSlice + ((chromaWidth * chromaHeight) * 2);
+		long int SizeFrame = (Width * Height);
+		SizeFrame = SizeFrame + ((chromaWidth * chromaHeight) * 2);
 		long int nPosVideo = ftell(hOutFile);
-		int SlicePos = nPosVideo / SizeSlice;
-		if (SlicePos < localSlice) {
-			for (int i = 0; i < (localSlice - SlicePos); i++) {
+		int SlicePos = nPosVideo / SizeFrame;
+		if (SlicePos < Frame) {
+			for (int i = 0; i < (Frame - SlicePos); i++) {
 				//guarda a posição dos slices faltantes
 				SaveImage();
 			}
 		}
 		else {
 			//posiciona o seek no inicio do slice que será escrito
-			long int NewPosSlice = localSlice * SizeSlice;
+			long int NewPosSlice = Frame * SizeFrame;
 			fseek(hOutFile, NewPosSlice, SEEK_SET);
-		}
-	}
-
-	void Clear() {
-		HeatMapBmp.clear();
-		ClearSort(Slice);
-	}
-
-	void AddCU(CU lineCU) {
-		bool bFound = false;
-		for (int nIndex = 0; nIndex < int(HeatMapBmp.size()); nIndex++) {
-			if ((HeatMapBmp[nIndex].Posx == lineCU.Posx) && (HeatMapBmp[nIndex].Posy == lineCU.Posy)) {
-				HeatMapBmp[nIndex].SetNewPositionXY(lineCU.Posx, lineCU.Posy, lineCU.Depth);
-				ColorYUV(HeatMapBmp[nIndex].Posx, HeatMapBmp[nIndex].Posy, lineCU.Color, HeatMapBmp[nIndex].CUSize);				
-
-				HeatMapBmp[nIndex].Posx = lineCU.Posx;
-				HeatMapBmp[nIndex].Posy = lineCU.Posy;
-
-				bFound = true;
-				break;
-			}
-		}
-
-		if (!bFound) {
-			CUIndexMap cuMap;
-			cuMap.SetNewPositionXY(lineCU.Posx, lineCU.Posy, lineCU.Depth);
-			ColorYUV(cuMap.Posx, cuMap.Posy, lineCU.Color, cuMap.CUSize);
-						
-			cuMap.Posx = lineCU.Posx;
-			cuMap.Posy = lineCU.Posy;
-
-			HeatMapBmp.push_back(cuMap);
 		}
 	}
 
@@ -356,6 +303,8 @@ public:
 				nPosition = (i * Width) + j;
 				if (!(nPosition > (Height * Width))) {
 					yPtr[nPosition] = uint8_t(RGB2Y(Rc, Gc, Bc)); 
+				} else {
+					continue;
 				}
 
 				if ((i & yMask) == 0 && (j & xMask) == 0 && (i / 2) < chromaHeight && (j / 2) < chromaWidth) {
@@ -370,14 +319,16 @@ public:
 	}
 
 	void FreeMemory(void) {
-		if (Slice != -1) {
-			cout << "FreeMemory" << endl;
+		if (Frame != -1) {
+			LOG_MESSAGE("FreeMemory");
 			fclose(hOutFile);
 			hOutFile = 0;
-
+			
+			/*
 			free(yPixels);
 			free(uPixels);
 			free(vPixels);
+			*/
 		}
 	}
 };
@@ -394,16 +345,16 @@ class BlendTwoVideos {
 
 	void Reposition(ifstream& file, int nSlice) {
 		//Size por slice
-		long int SizeSlice = (Width * Height);
-		SizeSlice = SizeSlice + ((chromaWidth * chromaHeight) * 2);
+		long int SizeFrame = (Width * Height);
+		SizeFrame = SizeFrame + ((chromaWidth * chromaHeight) * 2);
 
-		long int NewPosSlice = nSlice * SizeSlice;
+		long int NewPosSlice = nSlice * SizeFrame;
 
 		file.seekg(NewPosSlice, file.beg);
 	}
 
 	void LoadFrame(ifstream& inOriginal, uint8_t* pLuma, uint8_t* pCr, uint8_t* pCb) {
-		cout << "Load Frame: " << endl;
+		LOG_MESSAGE("Load Frame: ");
 		// Pointers we are working with
 		uint32_t x, y, xMask = 1, yMask = 1;
 		uint8_t* yPtr, * uPtr, * vPtr;
@@ -450,7 +401,7 @@ class BlendTwoVideos {
 		LoadFrame(inOriginal, sfOriginal.yPix, sfOriginal.uPix, sfOriginal.vPix);
 		LoadFrame(inHeatMap, sfHeatMap.yPix, sfHeatMap.uPix, sfHeatMap.vPix);
 
-		cout << "Blend  Frame: " << endl;
+		LOG_MESSAGE("Blend  Frame: ");
 		// Pointers we are working with	
 		uint32_t x, y, xMask = 1, yMask = 1;
 		uint8_t* yPtr, * uPtr, * vPtr;
@@ -537,39 +488,22 @@ public :
 };
 
 class CreateHeatMap {	
-private :
-	string m_strDelim;
-	string m_strDirOut;
-	string strFileOut;
 public :	
-	int Width, Height, CUSize;
-	int ColPosX, ColPosY, ColSlice, ColDepth;
-	
+	int Width, Height;
+	int ColPosX, ColPosY, ColFrame, ColDepth;
+	string Delim, DirOut, FileOut;
+
 	CreateHeatMap() {
-		ColPosX = 3;
-		ColPosY = 4;
-		ColSlice = 5;
+		ColPosX	 = 3;
+		ColPosY  = 4;
+		ColFrame = 5;
 		ColDepth = 7;
-		Width = 1280;
-		Height = 720;
-		strFileOut   = "64";
-		m_strDelim   = ",";
-		m_strDirOut  = "c:\\temp";
-		CUSize     = 64;
-	}
-
-	void SetFileOut(string strOut) {
-		strFileOut = strOut;
-	}
-
-	void SetDelim(string delim) {
-		m_strDelim = delim;
-	}
-
-	string SetPath(string strDirOut) {
-		m_strDirOut = strDirOut;
-		return CreateFolder(m_strDirOut);
-	}
+		Width    = 1280;
+		Height	 = 720;
+		FileOut  = "64";
+		Delim	 = ",";
+		DirOut	 = "c:\\temp";
+	}	
 
 	vector<string> split(const string& str, const string& delim) {
 		vector<string> tokens;
@@ -584,24 +518,6 @@ public :
 		return tokens;
 	}
 
-	string CreateFolder(string folderVideo) {		
-		wstring strPathVideo;
-		StringToWString(strPathVideo, folderVideo);
-
-		LPCWSTR wide_string;
-		wide_string = strPathVideo.c_str();
-
-		if (CreateDirectory(wide_string, NULL)) {		
-			return "Create";
-		}else if (ERROR_ALREADY_EXISTS == GetLastError()) {
-			return "ALREADY_EXISTS";
-		}else if (ERROR_PATH_NOT_FOUND == GetLastError()) {
-			return "ERROR: ERROR_PATH_NOT_FOUND";
-		}else {
-			return "ERROR: Failed to create directory";
-		}
-	}
-
 	static int StringToWString(std::wstring& ws, const std::string& s) {
 		std::wstring wsTmp(s.begin(), s.end());
 		ws = wsTmp;
@@ -611,7 +527,7 @@ public :
 	void LoadHeatMap(string PathFile, int nIndexHeat, int nValueMin, int nValueMax, int nRemoveLines) {		
 		ifstream pfFIle(PathFile.c_str());
 		if (!pfFIle.is_open()) {
-			cout << "ERROR: File Open" << '\n';
+			LOG_MESSAGE("ERROR: File Open");
 		}
 
 		string line;
@@ -626,47 +542,66 @@ public :
 		ImageCalor HeatImage;
 		HeatImage.Width = this->Width;
 		HeatImage.Height = this->Height;
-		HeatImage.Slice = -1;
-		HeatImage.CUSize = this->CUSize;
+		HeatImage.Frame = -1;
 		HeatImage.FreeMemory();		
-		HeatImage.SetNewVideoYUV(m_strDirOut + "\\out_" + strFileOut + ".yuv");
+		HeatImage.SetNewVideoYUV(DirOut + "\\out_" + FileOut + ".yuv");
 		
 		//Inicia váriaveis locais
 		bool bFirstLoop = true;
 		CU lineCU;		
 		lineCU.ColColor = nIndexHeat;	
-		//lineCU.ColSlice = ColSlice;
-		//lineCU.ColPosX = ColPosX;
-		//lineCU.ColPosY = ColPosY;
+		lineCU.ColFrame = ColFrame;
+		lineCU.ColPosX  = ColPosX;
+		lineCU.ColPosY  = ColPosY;
 		lineCU.ColDepth = ColDepth;
 		
 		lineCU.ValueMin = nValueMin;
 		lineCU.ValueMax = nValueMax;
 
+		//ultima coluna
+		int nMaxCol = nIndexHeat;
+		if (ColFrame > nMaxCol) {
+			nMaxCol = ColFrame;
+		}
+		if (ColPosX > nMaxCol) {
+			nMaxCol = ColPosX;
+		}
+		if (ColPosY > nMaxCol) {
+			nMaxCol = ColPosY;
+		}
+		if (ColDepth > nMaxCol) {
+			nMaxCol = ColDepth;
+		}
+
 		while (pfFIle.good()) {
 			getline(pfFIle, line);
 
-			lineSplit = split(line, m_strDelim);
-			lineCU.SetCUFromLine(lineSplit);
+			lineSplit = split(line, Delim);
+			
+			//Controle de acesso a posição
+			if (nMaxCol < lineSplit.size()){
+				lineCU.SetCUFromLine(lineSplit);
+			}
 
+			//Se for primeira passagem
 			if (bFirstLoop) {	
-				HeatImage.Slice = lineCU.Slice;
-				HeatImage.Clear();
+				HeatImage.Frame = lineCU.Frame;
+				HeatImage.ClearSort();
 				bFirstLoop = false;
 			}
 						
-			//New Frame se slice for diferente
-			if (HeatImage.Slice != lineCU.Slice) {
+			//Novo quadro se quadro atual for diferente do anterior
+			if (HeatImage.Frame != lineCU.Frame) {
 				HeatImage.SaveImage();
-				HeatImage.Slice = lineCU.Slice;
-				HeatImage.Clear();
+				HeatImage.Frame = lineCU.Frame;
+				HeatImage.ClearSort();
 			}
 
-			HeatImage.AddCU(lineCU);
+			HeatImage.ColorYUV(lineCU.PosCuX, lineCU.PosCuY, lineCU.Color, lineCU.CUSize());
 		}
 		HeatImage.SaveImage();
 		
 		pfFIle.close();
-		//HeatImage.FreeMemory();
+		HeatImage.FreeMemory();
 	}
 };

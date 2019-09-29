@@ -19,7 +19,7 @@ namespace HeatMapForm {
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
-	using namespace System::Drawing;	
+	using namespace System::Drawing;
 
 	/// <summary>
 	/// Sumário para MyForm
@@ -74,7 +74,7 @@ namespace HeatMapForm {
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::NumericUpDown^ upDownIgnore;
 
-	private: System::Windows::Forms::CheckBox^ cbHasHeader;
+
 	private: System::Windows::Forms::Label^ lblColColor;
 	private: System::Windows::Forms::NumericUpDown^ udColHeat;
 
@@ -86,8 +86,8 @@ namespace HeatMapForm {
 
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::RichTextBox^ memoLogger;
-	private: System::Windows::Forms::Label^ lblCuSize;
-	private: System::Windows::Forms::NumericUpDown^ udCuSize;
+
+
 
 
 
@@ -131,9 +131,11 @@ namespace HeatMapForm {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ PosY;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Slice;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Depth;
-private: System::Windows::Forms::Label^ label12;
-private: System::Windows::Forms::Label^ label13;
-private: System::Windows::Forms::NumericUpDown^ udColDepth;
+	private: System::Windows::Forms::Label^ label12;
+	private: System::Windows::Forms::Label^ label13;
+	private: System::Windows::Forms::NumericUpDown^ udColDepth;
+
+
 
 
 
@@ -148,7 +150,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 		/// <summary>
 		/// Variável de designer necessária.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -175,7 +177,6 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			this->btnCreateHeatmap = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->upDownIgnore = (gcnew System::Windows::Forms::NumericUpDown());
-			this->cbHasHeader = (gcnew System::Windows::Forms::CheckBox());
 			this->lblColColor = (gcnew System::Windows::Forms::Label());
 			this->udColHeat = (gcnew System::Windows::Forms::NumericUpDown());
 			this->edtDelim = (gcnew System::Windows::Forms::TextBox());
@@ -183,8 +184,6 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			this->pathFolderVideo = (gcnew System::Windows::Forms::TextBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->memoLogger = (gcnew System::Windows::Forms::RichTextBox());
-			this->lblCuSize = (gcnew System::Windows::Forms::Label());
-			this->udCuSize = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->udHeight = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label4 = (gcnew System::Windows::Forms::Label());
@@ -212,7 +211,6 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udValueMax))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->upDownIgnore))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColHeat))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udCuSize))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udHeight))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udWidth))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColPosX))->BeginInit();
@@ -228,7 +226,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 				this->Adress, this->Height,
 					this->Width, this->PosX, this->PosY, this->Slice, this->Depth
 			});
-			this->gridHeader->Location = System::Drawing::Point(11, 54);
+			this->gridHeader->Location = System::Drawing::Point(9, 44);
 			this->gridHeader->Name = L"gridHeader";
 			this->gridHeader->Size = System::Drawing::Size(713, 158);
 			this->gridHeader->TabIndex = 0;
@@ -272,7 +270,8 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// udValueMin
 			// 
 			this->udValueMin->DecimalPlaces = 2;
-			this->udValueMin->Location = System::Drawing::Point(79, 384);
+			this->udValueMin->Location = System::Drawing::Point(67, 368);
+			this->udValueMin->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 100, 0, 0, System::Int32::MinValue });
 			this->udValueMin->Name = L"udValueMin";
 			this->udValueMin->Size = System::Drawing::Size(76, 20);
 			this->udValueMin->TabIndex = 6;
@@ -280,7 +279,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// udValueMax
 			// 
 			this->udValueMax->DecimalPlaces = 2;
-			this->udValueMax->Location = System::Drawing::Point(218, 386);
+			this->udValueMax->Location = System::Drawing::Point(211, 368);
 			this->udValueMax->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000, 0, 0, 0 });
 			this->udValueMax->Name = L"udValueMax";
 			this->udValueMax->Size = System::Drawing::Size(76, 20);
@@ -290,7 +289,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// lblMin
 			// 
 			this->lblMin->AutoSize = true;
-			this->lblMin->Location = System::Drawing::Point(31, 386);
+			this->lblMin->Location = System::Drawing::Point(19, 370);
 			this->lblMin->Name = L"lblMin";
 			this->lblMin->Size = System::Drawing::Size(42, 13);
 			this->lblMin->TabIndex = 8;
@@ -299,7 +298,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// lblMax
 			// 
 			this->lblMax->AutoSize = true;
-			this->lblMax->Location = System::Drawing::Point(171, 386);
+			this->lblMax->Location = System::Drawing::Point(159, 370);
 			this->lblMax->Name = L"lblMax";
 			this->lblMax->Size = System::Drawing::Size(46, 13);
 			this->lblMax->TabIndex = 9;
@@ -307,7 +306,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// btnFile
 			// 
-			this->btnFile->Location = System::Drawing::Point(421, 28);
+			this->btnFile->Location = System::Drawing::Point(385, 12);
 			this->btnFile->Name = L"btnFile";
 			this->btnFile->Size = System::Drawing::Size(125, 20);
 			this->btnFile->TabIndex = 10;
@@ -321,7 +320,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// btnCreateHeatmap
 			// 
-			this->btnCreateHeatmap->Location = System::Drawing::Point(387, 438);
+			this->btnCreateHeatmap->Location = System::Drawing::Point(385, 414);
 			this->btnCreateHeatmap->Name = L"btnCreateHeatmap";
 			this->btnCreateHeatmap->Size = System::Drawing::Size(57, 23);
 			this->btnCreateHeatmap->TabIndex = 11;
@@ -332,35 +331,24 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(127, 31);
+			this->label1->Location = System::Drawing::Point(8, 16);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(114, 13);
+			this->label1->Size = System::Drawing::Size(178, 13);
 			this->label1->TabIndex = 13;
-			this->label1->Text = L"Ignorar primeiras linhas";
+			this->label1->Text = L"Ignorar primeiras linhas (cabeçalhos)";
 			// 
 			// upDownIgnore
 			// 
-			this->upDownIgnore->Location = System::Drawing::Point(252, 24);
+			this->upDownIgnore->Location = System::Drawing::Point(189, 14);
 			this->upDownIgnore->Name = L"upDownIgnore";
 			this->upDownIgnore->Size = System::Drawing::Size(49, 20);
 			this->upDownIgnore->TabIndex = 12;
-			// 
-			// cbHasHeader
-			// 
-			this->cbHasHeader->AutoSize = true;
-			this->cbHasHeader->Checked = true;
-			this->cbHasHeader->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->cbHasHeader->Location = System::Drawing::Point(13, 28);
-			this->cbHasHeader->Name = L"cbHasHeader";
-			this->cbHasHeader->Size = System::Drawing::Size(101, 17);
-			this->cbHasHeader->TabIndex = 1;
-			this->cbHasHeader->Text = L"Tem Cabeçalho";
-			this->cbHasHeader->UseVisualStyleBackColor = true;
+			this->upDownIgnore->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			// 
 			// lblColColor
 			// 
 			this->lblColColor->AutoSize = true;
-			this->lblColColor->Location = System::Drawing::Point(174, 282);
+			this->lblColColor->Location = System::Drawing::Point(172, 268);
 			this->lblColColor->Name = L"lblColColor";
 			this->lblColColor->Size = System::Drawing::Size(84, 13);
 			this->lblColColor->TabIndex = 15;
@@ -368,7 +356,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// udColHeat
 			// 
-			this->udColHeat->Location = System::Drawing::Point(264, 280);
+			this->udColHeat->Location = System::Drawing::Point(262, 266);
 			this->udColHeat->Name = L"udColHeat";
 			this->udColHeat->Size = System::Drawing::Size(47, 20);
 			this->udColHeat->TabIndex = 14;
@@ -376,7 +364,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// edtDelim
 			// 
-			this->edtDelim->Location = System::Drawing::Point(372, 28);
+			this->edtDelim->Location = System::Drawing::Point(336, 13);
 			this->edtDelim->Name = L"edtDelim";
 			this->edtDelim->Size = System::Drawing::Size(43, 20);
 			this->edtDelim->TabIndex = 16;
@@ -385,7 +373,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// lblDelimiter
 			// 
 			this->lblDelimiter->AutoSize = true;
-			this->lblDelimiter->Location = System::Drawing::Point(307, 31);
+			this->lblDelimiter->Location = System::Drawing::Point(271, 16);
 			this->lblDelimiter->Name = L"lblDelimiter";
 			this->lblDelimiter->Size = System::Drawing::Size(59, 13);
 			this->lblDelimiter->TabIndex = 17;
@@ -393,7 +381,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// pathFolderVideo
 			// 
-			this->pathFolderVideo->Location = System::Drawing::Point(25, 441);
+			this->pathFolderVideo->Location = System::Drawing::Point(23, 417);
 			this->pathFolderVideo->Name = L"pathFolderVideo";
 			this->pathFolderVideo->Size = System::Drawing::Size(353, 20);
 			this->pathFolderVideo->TabIndex = 18;
@@ -401,7 +389,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(12, 418);
+			this->label2->Location = System::Drawing::Point(10, 394);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(233, 13);
 			this->label2->TabIndex = 19;
@@ -409,33 +397,16 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// memoLogger
 			// 
-			this->memoLogger->Location = System::Drawing::Point(11, 491);
+			this->memoLogger->Location = System::Drawing::Point(9, 459);
 			this->memoLogger->Name = L"memoLogger";
 			this->memoLogger->Size = System::Drawing::Size(713, 99);
 			this->memoLogger->TabIndex = 20;
 			this->memoLogger->Text = L"";
 			// 
-			// lblCuSize
-			// 
-			this->lblCuSize->AutoSize = true;
-			this->lblCuSize->Location = System::Drawing::Point(31, 334);
-			this->lblCuSize->Name = L"lblCuSize";
-			this->lblCuSize->Size = System::Drawing::Size(73, 13);
-			this->lblCuSize->TabIndex = 22;
-			this->lblCuSize->Text = L"Tamanho CU:";
-			// 
-			// udCuSize
-			// 
-			this->udCuSize->Location = System::Drawing::Point(110, 329);
-			this->udCuSize->Name = L"udCuSize";
-			this->udCuSize->Size = System::Drawing::Size(51, 20);
-			this->udCuSize->TabIndex = 21;
-			this->udCuSize->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 64, 0, 0, 0 });
-			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(171, 334);
+			this->label3->Location = System::Drawing::Point(19, 321);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(34, 13);
 			this->label3->TabIndex = 24;
@@ -443,7 +414,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// udHeight
 			// 
-			this->udHeight->Location = System::Drawing::Point(211, 332);
+			this->udHeight->Location = System::Drawing::Point(59, 319);
 			this->udHeight->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000, 0, 0, 0 });
 			this->udHeight->Name = L"udHeight";
 			this->udHeight->Size = System::Drawing::Size(51, 20);
@@ -453,7 +424,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(275, 334);
+			this->label4->Location = System::Drawing::Point(123, 321);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(46, 13);
 			this->label4->TabIndex = 26;
@@ -461,7 +432,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// udWidth
 			// 
-			this->udWidth->Location = System::Drawing::Point(327, 334);
+			this->udWidth->Location = System::Drawing::Point(175, 319);
 			this->udWidth->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000, 0, 0, 0 });
 			this->udWidth->Name = L"udWidth";
 			this->udWidth->Size = System::Drawing::Size(51, 20);
@@ -471,7 +442,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(127, 252);
+			this->label5->Location = System::Drawing::Point(125, 242);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(58, 13);
 			this->label5->TabIndex = 28;
@@ -479,7 +450,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// udColPosX
 			// 
-			this->udColPosX->Location = System::Drawing::Point(191, 248);
+			this->udColPosX->Location = System::Drawing::Point(189, 238);
 			this->udColPosX->Name = L"udColPosX";
 			this->udColPosX->Size = System::Drawing::Size(47, 20);
 			this->udColPosX->TabIndex = 27;
@@ -487,7 +458,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// udColPosY
 			// 
-			this->udColPosY->Location = System::Drawing::Point(264, 250);
+			this->udColPosY->Location = System::Drawing::Point(262, 240);
 			this->udColPosY->Name = L"udColPosY";
 			this->udColPosY->Size = System::Drawing::Size(47, 20);
 			this->udColPosY->TabIndex = 29;
@@ -496,7 +467,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(19, 252);
+			this->label7->Location = System::Drawing::Point(17, 242);
 			this->label7->Name = L"label7";
 			this->label7->Size = System::Drawing::Size(42, 13);
 			this->label7->TabIndex = 32;
@@ -504,16 +475,16 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// udColFrame
 			// 
-			this->udColFrame->Location = System::Drawing::Point(67, 248);
+			this->udColFrame->Location = System::Drawing::Point(65, 238);
 			this->udColFrame->Name = L"udColFrame";
 			this->udColFrame->Size = System::Drawing::Size(47, 20);
 			this->udColFrame->TabIndex = 31;
-			this->udColFrame->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
+			this->udColFrame->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5, 0, 0, 0 });
 			// 
 			// label8
 			// 
 			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(496, 225);
+			this->label8->Location = System::Drawing::Point(494, 215);
 			this->label8->Name = L"label8";
 			this->label8->Size = System::Drawing::Size(208, 13);
 			this->label8->TabIndex = 34;
@@ -521,21 +492,21 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// edtArqMescUm
 			// 
-			this->edtArqMescUm->Location = System::Drawing::Point(527, 249);
+			this->edtArqMescUm->Location = System::Drawing::Point(525, 239);
 			this->edtArqMescUm->Name = L"edtArqMescUm";
 			this->edtArqMescUm->Size = System::Drawing::Size(151, 20);
 			this->edtArqMescUm->TabIndex = 33;
 			// 
 			// edtArqMescDois
 			// 
-			this->edtArqMescDois->Location = System::Drawing::Point(527, 275);
+			this->edtArqMescDois->Location = System::Drawing::Point(525, 265);
 			this->edtArqMescDois->Name = L"edtArqMescDois";
 			this->edtArqMescDois->Size = System::Drawing::Size(153, 20);
 			this->edtArqMescDois->TabIndex = 35;
 			// 
 			// btnDissolve
 			// 
-			this->btnDissolve->Location = System::Drawing::Point(527, 301);
+			this->btnDissolve->Location = System::Drawing::Point(525, 291);
 			this->btnDissolve->Name = L"btnDissolve";
 			this->btnDissolve->Size = System::Drawing::Size(177, 23);
 			this->btnDissolve->TabIndex = 36;
@@ -546,7 +517,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// button1
 			// 
 			this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
-			this->button1->Location = System::Drawing::Point(681, 249);
+			this->button1->Location = System::Drawing::Point(679, 239);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(20, 20);
 			this->button1->TabIndex = 37;
@@ -556,7 +527,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// button2
 			// 
 			this->button2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button2.Image")));
-			this->button2->Location = System::Drawing::Point(681, 275);
+			this->button2->Location = System::Drawing::Point(679, 265);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(20, 20);
 			this->button2->TabIndex = 38;
@@ -566,7 +537,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label9
 			// 
 			this->label9->AutoSize = true;
-			this->label9->Location = System::Drawing::Point(12, 225);
+			this->label9->Location = System::Drawing::Point(10, 215);
 			this->label9->Name = L"label9";
 			this->label9->Size = System::Drawing::Size(169, 13);
 			this->label9->TabIndex = 39;
@@ -575,7 +546,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label10
 			// 
 			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(12, 316);
+			this->label10->Location = System::Drawing::Point(10, 296);
 			this->label10->Name = L"label10";
 			this->label10->Size = System::Drawing::Size(98, 13);
 			this->label10->TabIndex = 40;
@@ -584,7 +555,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label11
 			// 
 			this->label11->AutoSize = true;
-			this->label11->Location = System::Drawing::Point(12, 364);
+			this->label11->Location = System::Drawing::Point(10, 349);
 			this->label11->Name = L"label11";
 			this->label11->Size = System::Drawing::Size(303, 13);
 			this->label11->TabIndex = 41;
@@ -593,7 +564,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label6
 			// 
 			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(10, 475);
+			this->label6->Location = System::Drawing::Point(8, 443);
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(88, 13);
 			this->label6->TabIndex = 42;
@@ -602,7 +573,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label12
 			// 
 			this->label12->AutoSize = true;
-			this->label12->Location = System::Drawing::Point(244, 252);
+			this->label12->Location = System::Drawing::Point(242, 242);
 			this->label12->Name = L"label12";
 			this->label12->Size = System::Drawing::Size(14, 13);
 			this->label12->TabIndex = 43;
@@ -611,7 +582,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// label13
 			// 
 			this->label13->AutoSize = true;
-			this->label13->Location = System::Drawing::Point(14, 279);
+			this->label13->Location = System::Drawing::Point(12, 266);
 			this->label13->Name = L"label13";
 			this->label13->Size = System::Drawing::Size(47, 13);
 			this->label13->TabIndex = 45;
@@ -619,7 +590,7 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			// 
 			// udColDepth
 			// 
-			this->udColDepth->Location = System::Drawing::Point(67, 277);
+			this->udColDepth->Location = System::Drawing::Point(65, 264);
 			this->udColDepth->Name = L"udColDepth";
 			this->udColDepth->Size = System::Drawing::Size(47, 20);
 			this->udColDepth->TabIndex = 44;
@@ -652,8 +623,6 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			this->Controls->Add(this->udWidth);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->udHeight);
-			this->Controls->Add(this->lblCuSize);
-			this->Controls->Add(this->udCuSize);
 			this->Controls->Add(this->memoLogger);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->pathFolderVideo);
@@ -669,7 +638,6 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			this->Controls->Add(this->lblMin);
 			this->Controls->Add(this->udValueMax);
 			this->Controls->Add(this->udValueMin);
-			this->Controls->Add(this->cbHasHeader);
 			this->Controls->Add(this->gridHeader);
 			this->Name = L"MyForm";
 			this->Text = L"HeatMap";
@@ -678,7 +646,6 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udValueMax))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->upDownIgnore))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColHeat))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udCuSize))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udHeight))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udWidth))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->udColPosX))->EndInit();
@@ -690,158 +657,153 @@ private: System::Windows::Forms::NumericUpDown^ udColDepth;
 
 		}
 #pragma endregion	
-	
-private: System::Void Button1_Click(System::Object^ sender, System::EventArgs^ e) {				
-	openFD->Title = "Load File";
 
-	if (openFD->ShowDialog() == System::Windows::Forms::DialogResult::OK){	
-		this->Text = "HeatMap - " + openFD->FileName;
-		
-		string strFileName;		
+	private: System::Void Button1_Click(System::Object^ sender, System::EventArgs^ e) {
+		openFD->Title = "Load File";
 
-		strFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);
+		if (openFD->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
+			this->Text = "HeatMap - " + openFD->FileName;
 
-		ifstream FilePath(strFileName.c_str());
-		if (FilePath.is_open()) {
-			this->Text = "HeatMap - Open - " + openFD->FileName;
+			string strFileName;
 
-			string line;
-			vector <string> lineSplit;
+			strFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);
 
-			//Popula cabeçalhos
-			for (int i = 0; i < upDownIgnore->Value; i++) {
-				getline(FilePath, line);
-			}
-			string strResult = msclr::interop::marshal_as<std::string>(edtDelim->Text);
-			getline(FilePath, line);
-			lineSplit = split(line, strResult);
+			ifstream FilePath(strFileName.c_str());
+			if (FilePath.is_open()) {
+				this->Text = "HeatMap - Open - " + openFD->FileName;
 
-			gridHeader->Columns->Clear();
+				string line;
+				//Popula cabeçalhos
+				for (int i = 0; i < upDownIgnore->Value ; i++) {
+					getline(FilePath, line);
+				}
 
-			System::String^ strWAux;
-			for (int i=0; i < int(lineSplit.size()); i++) {
-				DataGridViewColumn^ colFullName = gcnew DataGridViewColumn;
-				DataGridViewCell^ celFullName = gcnew DataGridViewTextBoxCell;
-				colFullName->CellTemplate = celFullName;
-				gridHeader->Columns->Add(colFullName);
+				if (upDownIgnore->Value < 1) {
+					getline(FilePath, line);
+				}
 
-				if (cbHasHeader->Checked) {
+				vector <string> lineSplit;
+				string strResult = msclr::interop::marshal_as<std::string>(edtDelim->Text);				
+				lineSplit = split(line, strResult);
+
+				gridHeader->Columns->Clear();
+
+				System::String^ strWAux;
+				for (int i = 0; i < int(lineSplit.size()); i++) {
+					DataGridViewColumn^ colFullName = gcnew DataGridViewColumn;
+					DataGridViewCell^ celFullName = gcnew DataGridViewTextBoxCell;
+					colFullName->CellTemplate = celFullName;
+					gridHeader->Columns->Add(colFullName);
+					
+					//Cabeçalho na grid
 					strWAux = msclr::interop::marshal_as<System::String^>(lineSplit[i]);
 					gridHeader->Columns[i]->HeaderText = strWAux;
 				}
-			}				
 
-			//Popula grid com exemplo do arquivo
-			gridHeader->Rows->Clear();
-			for (int j = 0; (j < 4) && FilePath.good() ; j++) {
-				getline(FilePath, line);
-				lineSplit = split(line, ",");
-				gridHeader->Rows->Add();
-				for (int i = 0; i < int(lineSplit.size()); i++) {
-					strWAux = msclr::interop::marshal_as<System::String^>(lineSplit[i]);
-					gridHeader->Rows[j]->Cells[i]->Value = strWAux;
+				//Popula grid com exemplo do arquivo
+				gridHeader->Rows->Clear();
+				for (int j = 0; (j < 4) && FilePath.good(); j++) {
+					getline(FilePath, line);
+					lineSplit = split(line, ",");
+					gridHeader->Rows->Add();
+					for (int i = 0; i < int(lineSplit.size()); i++) {
+						strWAux = msclr::interop::marshal_as<System::String^>(lineSplit[i]);
+						gridHeader->Rows[j]->Cells[i]->Value = strWAux;
+					}
 				}
 			}
+
+			strFileName = msclr::interop::marshal_as<std::string>(openFD->SafeFileName);
+			string strPath = msclr::interop::marshal_as<std::string>(openFD->FileName);
+
+			string strDir = strPath.substr(0, strPath.size() - (strFileName.size() + 2));
+
+			pathFolderVideo->Text = msclr::interop::marshal_as<System::String^>(strDir);
 		}
-
-		strFileName = msclr::interop::marshal_as<std::string>(openFD->SafeFileName);
-		string strPath = msclr::interop::marshal_as<std::string>(openFD->FileName);
-
-		string strDir = strPath.substr(0, strPath.size() - (strFileName.size() + 2));
-
-		pathFolderVideo->Text = msclr::interop::marshal_as<System::String^>(strDir);
 	}
-}		 	
 
-private: System::Void BtnCreateHeatmap_Click(System::Object^ sender, System::EventArgs^ e) {
-	memoLogger->AppendText("Begin\n");
+	private: System::Void BtnCreateHeatmap_Click(System::Object^ sender, System::EventArgs^ e) {
+		memoLogger->AppendText("Begin\n");
 
-	RunHeatMap();
+		RunHeatMap();
 
-	memoLogger->AppendText("End\n");
-}
-
-private: System::Void GridHeader_CellClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
-	udColHeat->Value = e->ColumnIndex;
-}
-		 
-void RunHeatMap() {
-	string strFileName = msclr::interop::marshal_as<std::string>(openFD->SafeFileName);
-	vector <string> lineSplit;
-	lineSplit = split(strFileName, ".");
-	strFileName = lineSplit[0];
-
-	int nHeader = int(upDownIgnore->Value);
-	if (cbHasHeader->Checked)
-		nHeader++;
-
-	CreateHeatMap chmMap;
-	chmMap.ColPosX  = int(udColPosX->Value);
-	chmMap.ColPosY  = int(udColPosY->Value);
-	chmMap.ColSlice = int(udColFrame->Value);
-	chmMap.ColDepth = int(udColDepth->Value);
-	chmMap.Width = int(udWidth->Value);
-	chmMap.Height = int(udHeight->Value);
-	chmMap.CUSize   = int(udCuSize->Value);		
-
-	chmMap.SetDelim(msclr::interop::marshal_as<std::string>(edtDelim->Text));	
-	chmMap.SetFileOut(strFileName);
-
-	string strResult = chmMap.SetPath(msclr::interop::marshal_as<std::string>(pathFolderVideo->Text));
-
-	memoLogger->AppendText(msclr::interop::marshal_as<System::String^>(strResult + "\n"));
-
-	memoLogger->AppendText("Create HeatMap\n");
-
-	//Create YUV HeatMap
-	strFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);	
-
-	chmMap.LoadHeatMap(strFileName, int(udColHeat->Value), int(udValueMin->Value), int(udValueMax->Value), nHeader);
-}
-
-vector<string> split(const string& str, const string& delim){
-	vector<string> tokens;
-	size_t prev = 0, pos = 0;
-	do{
-		pos = str.find(delim, prev);
-		if (pos == string::npos) pos = str.length();
-		string token = str.substr(prev, pos - prev);
-		if (!token.empty()) tokens.push_back(token);
-		prev = pos + delim.length();
-	} while (pos < str.length() && prev < str.length());
-	return tokens;
-}
-
-private: System::Void Button1_Click_1(System::Object^ sender, System::EventArgs^ e) {
-	BlendTwoVideos videoOut;
-	videoOut.Width = int(udWidth->Value);
-	videoOut.Height = int(udHeight->Value);
-
-	string strVideoUm    = msclr::interop::marshal_as<std::string>(edtArqMescUm->Text);
-	string strVideoDois  = msclr::interop::marshal_as<std::string>(edtArqMescDois->Text);
-	string strPathFolder = msclr::interop::marshal_as<std::string>(pathFolderVideo->Text);
-	
-	memoLogger->AppendText("Blend Start\n");
-	memoLogger->AppendText("Width : " + udWidth->Value + " Height : " + udHeight->Value +  "\n");
-	videoOut.StartBlend(strPathFolder, strVideoUm, strVideoDois);
-
-	memoLogger->AppendText("Blend End\n");
-}
-private: System::Void Button1_Click_2(System::Object^ sender, System::EventArgs^ e) {
-	openFD->Title = "Encontrar arquivo para mesclar";
-
-	if (openFD->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
-		edtArqMescUm->Text = openFD->FileName;
+		memoLogger->AppendText("End\n");
 	}
-}
 
-private: System::Void Button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	openFD->Title = "Encontrar arquivo para mesclar";
-
-	if (openFD->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
-		edtArqMescDois->Text = openFD->FileName;
+	private: System::Void GridHeader_CellClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
+		udColHeat->Value = e->ColumnIndex;
 	}
-}
-};
 
-}
+	void RunHeatMap() {
+		string strFileName = msclr::interop::marshal_as<std::string>(openFD->SafeFileName);
+		vector <string> lineSplit;
+		lineSplit = split(strFileName, ".");
+		strFileName = lineSplit[0];
+
+		int nHeader = int(upDownIgnore->Value);
+
+		CreateHeatMap chmMap;
+		chmMap.ColPosX  = int(udColPosX->Value);
+		chmMap.ColPosY  = int(udColPosY->Value);
+		chmMap.ColFrame = int(udColFrame->Value);
+		chmMap.ColDepth = int(udColDepth->Value);
+		chmMap.Width	= int(udWidth->Value);
+		chmMap.Height	= int(udHeight->Value);
+
+		chmMap.Delim    = msclr::interop::marshal_as<std::string>(edtDelim->Text);
+		chmMap.FileOut  = strFileName;
+		chmMap.DirOut   = msclr::interop::marshal_as<std::string>(pathFolderVideo->Text);		
+
+		memoLogger->AppendText("Create HeatMap\n");
+
+		//Create YUV HeatMap
+		strFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);
+
+		chmMap.LoadHeatMap(strFileName, int(udColHeat->Value), int(udValueMin->Value), int(udValueMax->Value), nHeader);
+	}
+
+	vector<string> split(const string& str, const string& delim) {
+		vector<string> tokens;
+		size_t prev = 0, pos = 0;
+		do {
+			pos = str.find(delim, prev);
+			if (pos == string::npos) pos = str.length();
+			string token = str.substr(prev, pos - prev);
+			if (!token.empty()) tokens.push_back(token);
+			prev = pos + delim.length();
+		} while (pos < str.length() && prev < str.length());
+		return tokens;
+	}
+
+	private: System::Void Button1_Click_1(System::Object^ sender, System::EventArgs^ e) {
+		BlendTwoVideos videoOut;
+		videoOut.Width = int(udWidth->Value);
+		videoOut.Height = int(udHeight->Value);
+
+		string strVideoUm = msclr::interop::marshal_as<std::string>(edtArqMescUm->Text);
+		string strVideoDois = msclr::interop::marshal_as<std::string>(edtArqMescDois->Text);
+		string strPathFolder = msclr::interop::marshal_as<std::string>(pathFolderVideo->Text);
+
+		memoLogger->AppendText("Blend Start\n");
+		memoLogger->AppendText("Width : " + udWidth->Value + " Height : " + udHeight->Value + "\n");
+		videoOut.StartBlend(strPathFolder, strVideoUm, strVideoDois);
+
+		memoLogger->AppendText("Blend End\n");
+	}
+	private: System::Void Button1_Click_2(System::Object^ sender, System::EventArgs^ e) {
+		openFD->Title = "Encontrar arquivo para mesclar";
+
+		if (openFD->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
+			edtArqMescUm->Text = openFD->FileName;
+		}
+	}
+
+	private: System::Void Button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		openFD->Title = "Encontrar arquivo para mesclar";
+
+		if (openFD->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
+			edtArqMescDois->Text = openFD->FileName;
+		}
+	}	
+};
+}
