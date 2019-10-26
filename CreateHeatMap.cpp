@@ -3,13 +3,11 @@
 #include <thread>
 
 #include <string>
-#include <stdio.h>
 #include <tchar.h>
 #include <stdint.h>
 #include <windows.h>
 #include <algorithm>
 #include <memory>
-#include <iostream>
 #include <fstream>
 #include <vector>
 #include <tchar.h>
