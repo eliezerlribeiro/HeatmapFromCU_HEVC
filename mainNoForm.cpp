@@ -3,8 +3,8 @@
 int main(int argc, char* argv[]) {
 
 	if (argc < 13) {
-		printf("Qtd parametro invalidos\n");
-		printf("Parametros : Altura Largura Delimitador ColunaQuadro ColunaX ColunaY ColunaDepth ColunaCalor ValorMinimo ValorMaximo ArqEntrada DirSaida\n");
+		//printf("Qtd parametro invalidos\n");
+		//printf("Parametros : Altura Largura Delimitador ColunaQuadro ColunaX ColunaY ColunaDepth ColunaCalor ValorMinimo ValorMaximo ArqEntrada DirSaida\n");
 
 		return -1;
 	}

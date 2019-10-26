@@ -139,11 +139,11 @@ public:
 
 		//Calcula o X e Y da posição atual
 		int posM;		
-		posM = floor(position / 16);
+		posM = int(floor(position / 16));
 		PosCuY = c_mY[posM];
 		PosCuX = c_mX[posM];
 
-		posM = floor((position % 16) / 4);
+		posM = int(floor((position % 16) / 4));
 
 		PosCuY = (c_mY[posM] / 2) + PosCuY;
 		PosCuX = (c_mX[posM] / 2) + PosCuX;
@@ -356,7 +356,7 @@ class BlendTwoVideos {
 	void LoadFrame(ifstream& inOriginal, uint8_t* pLuma, uint8_t* pCr, uint8_t* pCb) {
 		LOG_MESSAGE("Load Frame: ");
 		// Pointers we are working with
-		uint32_t x, y, xMask = 1, yMask = 1;
+		uint32_t xMask = 1, yMask = 1;
 		uint8_t* yPtr, * uPtr, * vPtr;
 		yPtr = pLuma;
 		uPtr = pCr;
@@ -414,8 +414,6 @@ class BlendTwoVideos {
 		uPtrHeat = sfHeatMap.uPix;
 		vPtrHeat = sfHeatMap.vPix;
 
-
-		COLORREF rgbColor, rgbHeat;
 		uint8_t aux;
 		for (y = 0; y < Height; y++) {
 			for (x = 0; x < Width; x++) {

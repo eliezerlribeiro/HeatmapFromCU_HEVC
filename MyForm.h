@@ -716,7 +716,7 @@ namespace HeatMapForm {
 			strFileName = msclr::interop::marshal_as<std::string>(openFD->SafeFileName);
 			string strPath = msclr::interop::marshal_as<std::string>(openFD->FileName);
 
-			string strDir = strPath.substr(0, strPath.size() - (strFileName.size() + 2));
+			string strDir = strPath.substr(0, strPath.size() - (strFileName.size() + 1));
 
 			pathFolderVideo->Text = msclr::interop::marshal_as<System::String^>(strDir);
 		}
