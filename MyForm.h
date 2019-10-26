@@ -11,6 +11,7 @@
 #pragma once
 
 namespace HeatMapForm {
+	string strFileName, strDirName, strPathFileName;
 	using namespace std;
 
 	using namespace System;
@@ -38,6 +39,7 @@ namespace HeatMapForm {
 		/// <summary>
 		/// Limpar os recursos que estão sendo usados.
 		/// </summary>
+		
 		~MyForm()
 		{
 			if (components)
@@ -50,8 +52,6 @@ namespace HeatMapForm {
 	protected:
 
 	protected:
-
-
 
 
 
@@ -663,11 +663,9 @@ namespace HeatMapForm {
 		if (openFD->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
 			this->Text = "HeatMap - " + openFD->FileName;
 
-			string strFileName;
+			strPathFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);
 
-			strFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);
-
-			ifstream FilePath(strFileName.c_str());
+			ifstream FilePath(strPathFileName.c_str());
 			if (FilePath.is_open()) {
 				this->Text = "HeatMap - Open - " + openFD->FileName;
 
@@ -713,11 +711,9 @@ namespace HeatMapForm {
 			}
 
 			strFileName = msclr::interop::marshal_as<std::string>(openFD->SafeFileName);
-			string strPath = msclr::interop::marshal_as<std::string>(openFD->FileName);
+			strDirName = strPathFileName.substr(0, strPathFileName.size() - (strFileName.size() + 1));
 
-			string strDir = strPath.substr(0, strPath.size() - (strFileName.size() + 1));
-
-			pathFolderVideo->Text = msclr::interop::marshal_as<System::String^>(strDir);
+			pathFolderVideo->Text = msclr::interop::marshal_as<System::String^>(strDirName);
 		}
 	}
 
@@ -734,10 +730,8 @@ namespace HeatMapForm {
 	}
 
 	void RunHeatMap() {
-		string strFileName = msclr::interop::marshal_as<std::string>(openFD->SafeFileName);
 		vector <string> lineSplit;
 		lineSplit = split(strFileName, ".");
-		strFileName = lineSplit[0];
 
 		int nHeader = int(upDownIgnore->Value);
 
@@ -750,15 +744,12 @@ namespace HeatMapForm {
 		chmMap.Height	= int(udHeight->Value);
 
 		chmMap.Delim    = msclr::interop::marshal_as<std::string>(edtDelim->Text);
-		chmMap.FileOut  = strFileName;
-		chmMap.DirOut   = msclr::interop::marshal_as<std::string>(pathFolderVideo->Text);		
+		chmMap.FileOut  = lineSplit[0];
+		chmMap.DirOut   = strDirName;
 
 		memoLogger->AppendText("Create HeatMap\n");
 
-		//Create YUV HeatMap
-		strFileName = msclr::interop::marshal_as<std::string>(openFD->FileName);
-
-		chmMap.LoadHeatMap(strFileName, int(udColHeat->Value), int(udValueMin->Value), int(udValueMax->Value), nHeader);
+		chmMap.LoadHeatMap(strPathFileName, int(udColHeat->Value), int(udValueMin->Value), int(udValueMax->Value), nHeader);
 	}
 
 	vector<string> split(const string& str, const string& delim) {
