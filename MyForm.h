@@ -774,11 +774,22 @@ namespace HeatMapForm {
 		string strVideoDois = msclr::interop::marshal_as<std::string>(edtArqMescDois->Text);
 		string strPathFolder = msclr::interop::marshal_as<std::string>(pathFolderVideo->Text);
 
-		memoLogger->AppendText("Blend Start\n");
-		memoLogger->AppendText("Width : " + udWidth->Value + " Height : " + udHeight->Value + "\n");
-		videoOut.StartBlend(strPathFolder, strVideoUm, strVideoDois);
+		if (strPathFolder == "") {
+			memoLogger->AppendText("Prencher caminho de saída.\n");
+		}
+		else if (strVideoUm == "") {
+			memoLogger->AppendText("Prencher caminho do primeiro arquivo.\n");
+		}
+		else if (strVideoDois == "") {
+			memoLogger->AppendText("Prencher caminho do segundo arquivo.\n");
+		}else {
+			memoLogger->AppendText("Blend Start\n");
+			memoLogger->AppendText("Width : " + udWidth->Value + " Height : " + udHeight->Value + "\n");
+			videoOut.StartBlend(strPathFolder, strVideoUm, strVideoDois);
 
-		memoLogger->AppendText("Blend End\n");
+			memoLogger->AppendText("Blend End\n");
+		}		
+
 	}
 	private: System::Void Button1_Click_2(System::Object^ sender, System::EventArgs^ e) {
 		openFD->Title = "Encontrar arquivo para mesclar";

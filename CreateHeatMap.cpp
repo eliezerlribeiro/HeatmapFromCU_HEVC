@@ -72,22 +72,20 @@ class CU {
 		
 		COLORREF c;
 		int spaceRgb = int(nNormal / 25);
-		if (spaceRgb < 1) {
+		if (spaceRgb < 0) {
+			//Caso de erro
+			c = RGB(128, 128, 128);
+		}else if (spaceRgb < 1) {
 			c = RGB(0, int(dFatorRgb), 255);
-		}
-		else if (spaceRgb < 2) {
+		}else if (spaceRgb < 2) {
 			c = RGB(0, 255, int(255 - dFatorRgb));
-		}
-		else if (spaceRgb < 3) {
+		}else if (spaceRgb < 3) {
 			c = RGB(int(dFatorRgb), 255, 0);
-		}
-		else if (spaceRgb < 4) {
+		}else if (spaceRgb < 4) {
 			c = RGB(255, int(255 - dFatorRgb), 0);
-		}
-		else if (spaceRgb == 4) {
+		}else if (spaceRgb == 4) {
 			c = RGB(255, 0, 0);
-		}
-		else {
+		}else {
 			//Caso de erro
 			c = RGB(128, 128, 128);
 		}
