@@ -2,7 +2,7 @@
 
 Crie mapas de cores com dados extraidos de seu CODEC.
 
-# No Interface
+## No Interface
 Para utilizaçao do projeto sem interface gráfica utilizar o arquivo 'mainNoForm.cpp'.
 
 Para correta execução deve ser observado os parâmetros de entrada do software.
@@ -14,6 +14,6 @@ if (argc < 13) {
   ```
 
 
-# Inteface Gráfica
+## Inteface Gráfica
 Caso decida utilizar a interface gráfica, saliento que o mesmo foi codificado na IDE 'Visual Studio 2019'.
 
